@@ -84,4 +84,4 @@ This project is open-source and available under the **MIT License**.
 ![S5](public/S5.jpg)
 ![S6](public/S6.jpg)
 ![S7](public/S7.jpg)
-![S9](public/S9.jpg)
+![S8](public/S8.jpg)
