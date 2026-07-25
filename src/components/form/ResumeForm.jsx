@@ -1,6 +1,5 @@
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
-import { jsPDF } from "jspdf";
 const ResumeForm = ({ onSubmit }) => {
   // Validation Schema using Yup
   const validationSchema = Yup.object({
@@ -29,65 +28,6 @@ const ResumeForm = ({ onSubmit }) => {
     }),
   });
 
-  const handleDownload = (values) => {
-    const doc = new jsPDF();
-
-    // Add Name and Designation to the PDF
-    doc.text(`Name: ${values.name}`, 20, 20);
-    doc.text(`Designation: ${values.designation}`, 20, 30);
-
-    // Add Experience to the PDF
-    let yPosition = 40;
-    doc.text("Experience:", 20, yPosition);
-    values.experiences.forEach((exp, index) => {
-      yPosition += 10;
-      doc.text(`Job Title: ${exp.mainHeading}`, 20, yPosition);
-      yPosition += 10;
-      doc.text(`Company: ${exp.companyName}`, 20, yPosition);
-      yPosition += 10;
-      doc.text(`Date: ${exp.date}`, 20, yPosition);
-      yPosition += 10;
-      doc.text(`Description: ${exp.description}`, 20, yPosition);
-      yPosition += 20;
-    });
-
-    // Add Education to the PDF
-    doc.text("Education:", 20, yPosition);
-    values.education.forEach((edu, index) => {
-      yPosition += 10;
-      doc.text(`Degree: ${edu.mainHeading}`, 20, yPosition);
-      yPosition += 10;
-      doc.text(`School: ${edu.schoolName}`, 20, yPosition);
-      yPosition += 10;
-      doc.text(`Date: ${edu.date}`, 20, yPosition);
-      yPosition += 20;
-    });
-
-    // Add Skills, Tools, and Languages to the PDF (Similar to Education and Experience)
-    doc.text("Skills:", 20, yPosition);
-    values.rightSidebar.skills.forEach((skill, index) => {
-      yPosition += 10;
-      doc.text(skill, 20, yPosition);
-    });
-
-    yPosition += 20;
-    doc.text("Tools:", 20, yPosition);
-    values.rightSidebar.tools.forEach((tool, index) => {
-      yPosition += 10;
-      doc.text(tool, 20, yPosition);
-    });
-
-    yPosition += 20;
-    doc.text("Languages:", 20, yPosition);
-    values.rightSidebar.languages.forEach((lang, index) => {
-      yPosition += 10;
-      doc.text(lang, 20, yPosition);
-    });
-
-    // Save the PDF with a name
-    doc.save("resume.pdf");
-  };
-
   return (
     <Formik
       initialValues={{
@@ -107,7 +47,7 @@ const ResumeForm = ({ onSubmit }) => {
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ values, setFieldValue, errors, touched, isSubmitting }) => (
+      {({ values, setFieldValue, errors, touched }) => (
         <Form className="p-10 space-y-8 bg-white shadow-lg rounded-lg">
           {/* Name and Designation Section */}
           <div>
@@ -370,16 +310,6 @@ const ResumeForm = ({ onSubmit }) => {
           >
             Submit
           </button>
-
-          {/* {!isSubmitting && (
-            <button
-              type="button"
-              onClick={() => handleDownload(values)}
-              className="bg-green-500 text-white p-2 mt-5"
-            >
-              Download Resume as PDF
-            </button>
-          )} */}
         </Form>
       )}
     </Formik>
