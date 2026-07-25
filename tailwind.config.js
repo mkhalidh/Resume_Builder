@@ -22,5 +22,20 @@ export default {
       },
     },
   },
+  // Tailwind's default color utilities emit `rgb(r g b / var(--tw-text-opacity))`
+  // so the separate `text-opacity-*` utilities can compose with them. html2canvas
+  // (used for PDF export) can't resolve that CSS variable indirection and renders
+  // garbled colors as a result. Disabling these core plugins makes every color
+  // utility compile to a plain, fully-resolved color instead — the app doesn't
+  // use the separate opacity utilities anywhere, so this has no visual effect
+  // on screen, only on export.
+  corePlugins: {
+    textOpacity: false,
+    backgroundOpacity: false,
+    borderOpacity: false,
+    divideOpacity: false,
+    ringOpacity: false,
+    placeholderOpacity: false,
+  },
   plugins: [],
 };
