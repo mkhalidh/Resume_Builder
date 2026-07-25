@@ -27,22 +27,22 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { templates } from "../templates";
-import { sampleResumeData } from "../templates/sampleData";
 import Footer from "../components/Footer";
+import TemplatePreview from "../components/TemplatePreview";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const trustPoints = ["Free forever", "No sign-up", "Export as PDF"];
 
 const heroStats = [
-  { value: "3", label: "templates to pick from", icon: LayoutGrid },
+  { value: "9", label: "templates to pick from", icon: LayoutGrid },
   { value: "1-click", label: "PDF export", icon: Download },
   { value: "$0", label: "cost, always", icon: Heart },
 ];
 
 const techStack = ["React", "Tailwind CSS", "GSAP", "React Router", "Vite"];
 
-const filterPills = ["All", "Classic", "Modern", "Minimal", "ATS-Friendly", "Free"];
+const filterPills = ["All", "Modern", "Minimal", "Editorial", "ATS-Friendly", "Free"];
 
 const atsAreas = [
   {
@@ -136,8 +136,8 @@ const toolCards = [
   },
   {
     icon: Layers,
-    title: "Three Distinct Styles",
-    body: "Classic, modern, or minimal — pick the layout that fits you.",
+    title: "Nine Distinct Styles",
+    body: "Nine distinct layouts — pick the style that fits you.",
     to: "/templates",
   },
 ];
@@ -175,7 +175,7 @@ const comparisonOthers = [
 
 const freeForeverList = [
   "Unlimited resumes, unlimited downloads",
-  "All 3 templates unlocked from the start",
+  "All 9 templates unlocked from the start",
   "Full PDF export, no watermark",
   "No credit card, ever",
 ];
@@ -338,14 +338,6 @@ const StarRow = ({ count = 5 }) => (
     {Array.from({ length: count }).map((_, i) => (
       <Star key={i} className="w-4 h-4 fill-gold text-gold" strokeWidth={0} />
     ))}
-  </div>
-);
-
-const TemplatePreview = ({ Template, width = 900, scale = 0.31 }) => (
-  <div
-    style={{ width, transform: `scale(${scale})`, transformOrigin: "top left" }}
-  >
-    <Template data={sampleResumeData} imageUrl="/photo.png" />
   </div>
 );
 

@@ -1,4 +1,3 @@
-import ClassicTemplate from "./ClassicTemplate";
 import ModernTemplate from "./ModernTemplate";
 import MinimalTemplate from "./MinimalTemplate";
 import { EditorialDarkTemplate, EditorialLightTemplate } from "./EditorialTemplate";
@@ -9,12 +8,6 @@ import CorporateTemplate from "./CorporateTemplate";
 import ATSTemplate from "./ATSTemplate";
 
 export const templates = [
-  {
-    id: "classic",
-    name: "Classic Gold",
-    description: "Warm, friendly two-column layout with a bold header.",
-    component: ClassicTemplate,
-  },
   {
     id: "modern",
     name: "Modern Jade",
