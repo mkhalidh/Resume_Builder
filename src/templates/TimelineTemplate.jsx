@@ -49,7 +49,7 @@ const TimelineTemplate = ({ data, imageUrl }) => {
               <p className="font-body text-ink/40 text-xs mb-1">{exp.date}</p>
             )}
             {exp.mainHeading && (
-              <h3 className="font-display font-semibold text-ink">
+              <h3 className="font-display font-semibold text-ink text-base">
                 {exp.mainHeading}
               </h3>
             )}
@@ -78,7 +78,7 @@ const TimelineTemplate = ({ data, imageUrl }) => {
               </p>
             )}
             {project.mainHeading && (
-              <h3 className="font-display font-semibold text-ink">
+              <h3 className="font-display font-semibold text-ink text-base">
                 {project.mainHeading}
               </h3>
             )}
@@ -100,7 +100,7 @@ const TimelineTemplate = ({ data, imageUrl }) => {
               <p className="font-body text-ink/40 text-xs mb-1">{edu.date}</p>
             )}
             {edu.schoolName && (
-              <h3 className="font-display font-semibold text-ink">
+              <h3 className="font-display font-semibold text-ink text-base">
                 {edu.schoolName}
               </h3>
             )}

@@ -50,7 +50,7 @@ const ModernTemplate = ({ data, imageUrl }) => {
             {data.experiences.map((exp, i) => (
               <div key={i} className="pl-4 border-l-2 border-jade-50">
                 {exp.mainHeading && (
-                  <h3 className="font-display font-semibold text-ink">
+                  <h3 className="font-display font-semibold text-ink text-base">
                     {exp.mainHeading}
                   </h3>
                 )}
@@ -84,7 +84,7 @@ const ModernTemplate = ({ data, imageUrl }) => {
                 (project, i) =>
                   project.mainHeading && (
                     <div key={i} className="pl-4 border-l-2 border-jade-50">
-                      <h3 className="font-display font-semibold text-ink">
+                      <h3 className="font-display font-semibold text-ink text-base">
                         {project.mainHeading}
                       </h3>
                       {project.date && (
@@ -112,7 +112,7 @@ const ModernTemplate = ({ data, imageUrl }) => {
             {data.education.map((edu, i) => (
               <div key={i} className="pl-4 border-l-2 border-jade-50">
                 {edu.mainHeading && (
-                  <h3 className="font-display font-semibold text-ink">
+                  <h3 className="font-display font-semibold text-ink text-base">
                     {edu.mainHeading}
                   </h3>
                 )}

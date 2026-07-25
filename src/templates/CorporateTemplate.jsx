@@ -56,7 +56,7 @@ const CorporateTemplate = ({ data, imageUrl }) => {
                     </p>
                     <div>
                       {exp.mainHeading && (
-                        <h3 className="font-display font-semibold text-ink">
+                        <h3 className="font-display font-semibold text-ink text-base">
                           {exp.mainHeading}
                         </h3>
                       )}
@@ -119,7 +119,7 @@ const CorporateTemplate = ({ data, imageUrl }) => {
                     </p>
                     <div>
                       {edu.schoolName && (
-                        <h3 className="font-display font-semibold text-ink">
+                        <h3 className="font-display font-semibold text-ink text-base">
                           {edu.schoolName}
                         </h3>
                       )}

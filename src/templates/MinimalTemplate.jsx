@@ -29,7 +29,7 @@ const MinimalTemplate = ({ data, imageUrl }) => {
             <div key={i} className="grid grid-cols-[1fr_auto] gap-4">
               <div>
                 {exp.mainHeading && (
-                  <h3 className="font-display font-semibold text-ink">
+                  <h3 className="font-display font-semibold text-ink text-base">
                     {exp.mainHeading}
                   </h3>
                 )}
@@ -65,7 +65,7 @@ const MinimalTemplate = ({ data, imageUrl }) => {
                 project.mainHeading && (
                   <div key={i} className="grid grid-cols-[1fr_auto] gap-4">
                     <div>
-                      <h3 className="font-display font-semibold text-ink">
+                      <h3 className="font-display font-semibold text-ink text-base">
                         {project.mainHeading}
                       </h3>
                       {project.description && (
@@ -95,7 +95,7 @@ const MinimalTemplate = ({ data, imageUrl }) => {
             <div key={i} className="grid grid-cols-[1fr_auto] gap-4">
               <div>
                 {edu.mainHeading && (
-                  <h3 className="font-display font-semibold text-ink">
+                  <h3 className="font-display font-semibold text-ink text-base">
                     {edu.mainHeading}
                   </h3>
                 )}

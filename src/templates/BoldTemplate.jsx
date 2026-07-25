@@ -33,7 +33,7 @@ const BoldTemplate = ({ data, imageUrl }) => {
                     <div key={i} className="bg-surface rounded-xl p-5">
                       <div className="flex items-baseline justify-between mb-1">
                         {exp.mainHeading && (
-                          <h3 className="font-display font-semibold text-ink">
+                          <h3 className="font-display font-semibold text-ink text-base">
                             {exp.mainHeading}
                           </h3>
                         )}
@@ -67,7 +67,7 @@ const BoldTemplate = ({ data, imageUrl }) => {
                   project.mainHeading && (
                     <div key={i} className="bg-surface rounded-xl p-5">
                       <div className="flex items-baseline justify-between mb-1">
-                        <h3 className="font-display font-semibold text-ink">
+                        <h3 className="font-display font-semibold text-ink text-base">
                           {project.mainHeading}
                         </h3>
                         {project.date && (
