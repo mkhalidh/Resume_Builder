@@ -21,7 +21,7 @@ const ListBlock = ({ title, items }) => {
 
 const ModernTemplate = ({ data, imageUrl }) => {
   return (
-    <div className="flex bg-white shadow-md overflow-hidden">
+    <div className="flex bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       {/* Sidebar */}
       <div className="w-[280px] bg-ink px-8 py-10 shrink-0">
         <img

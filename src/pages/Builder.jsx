@@ -68,6 +68,7 @@ const Builder = () => {
       logging: false,
       scrollX: 0, // Prevents unwanted horizontal scroll issues
       scrollY: 0,
+      backgroundColor: "#ffffff", // html2canvas's own background auto-detection is unreliable
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
 
@@ -87,7 +88,7 @@ const Builder = () => {
   };
 
   return (
-    <div className="bg-surface min-h-screen">
+    <div className="bg-surface min-h-screen overflow-x-hidden">
       <div className="flex flex-col justify-center items-center pt-14 pb-8 px-6">
         <p className="font-body text-jade text-sm font-medium mb-2">
           {template.name} template ·{" "}
@@ -112,14 +113,28 @@ const Builder = () => {
         </button>
       </div>
 
-      {/* Resume Preview (Captured for PDF) */}
+      {/* Resume Preview shown to the user — zoomed to fit the screen */}
       <div className="flex justify-center px-6 pb-16">
         <div ref={previewWrapperRef} className="w-full max-w-4xl">
           <div style={{ width: PREVIEW_NATIVE_WIDTH, zoom: scale }}>
-            <div ref={resumeRef}>
-              <Template data={resumeData} imageUrl={imageUrl} />
-            </div>
+            <Template data={resumeData} imageUrl={imageUrl} />
           </div>
+        </div>
+      </div>
+
+      {/*
+        Hidden copy rendered at native width for html2canvas to capture.
+        html2canvas doesn't understand the non-standard `zoom` property used
+        above to fit the preview to the screen, so PDF export always reads
+        from this untouched, full-size copy instead of the visible one. Kept
+        in normal document flow (not pushed off-screen with a large negative
+        offset) and clipped via a zero-height ancestor — html2canvas's region
+        capture gets unreliable when the source element sits far outside its
+        rendering viewport.
+      */}
+      <div className="h-0 overflow-hidden" aria-hidden="true">
+        <div ref={resumeRef} style={{ width: PREVIEW_NATIVE_WIDTH }}>
+          <Template data={resumeData} imageUrl={imageUrl} />
         </div>
       </div>
     </div>

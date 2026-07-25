@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .vercel
+pdf_test_results
 
 # Editor directories and files
 .vscode/*

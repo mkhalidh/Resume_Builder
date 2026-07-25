@@ -47,7 +47,7 @@ const TimelineTemplate = ({ data, imageUrl }) => {
   );
 
   return (
-    <div className="bg-white shadow-md overflow-hidden px-12 py-12 max-w-2xl mx-auto">
+    <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden px-12 py-12 max-w-2xl mx-auto">
       <div className="flex flex-col items-center text-center mb-12">
         {imageUrl && (
           <img

@@ -2,7 +2,7 @@ const BoldTemplate = ({ data, imageUrl }) => {
   const { skills, tools, languages } = data.rightSidebar || {};
 
   return (
-    <div className="bg-white shadow-md overflow-hidden">
+    <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       <div className="bg-coral px-12 pt-12 pb-16">
         <h1 className="font-display font-extrabold text-white text-4xl tracking-tight">
           {data.name || "Your Name"}

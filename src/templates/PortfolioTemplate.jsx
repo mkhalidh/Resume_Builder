@@ -22,7 +22,7 @@ const SidebarBlock = ({ title, items }) => {
 
 const PortfolioTemplate = ({ data, imageUrl }) => {
   return (
-    <div className="flex flex-col md:flex-row bg-white shadow-md overflow-hidden">
+    <div className="flex flex-col md:flex-row bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       {/* Sidebar */}
       <div className="md:w-[240px] bg-[#232339] px-7 py-10 shrink-0">
         {imageUrl && (

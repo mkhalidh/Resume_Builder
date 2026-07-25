@@ -15,7 +15,7 @@ const SidebarList = ({ title, items }) => {
 
 const CorporateTemplate = ({ data, imageUrl }) => {
   return (
-    <div className="bg-white shadow-md overflow-hidden">
+    <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       <div className="grid sm:grid-cols-[1fr_260px]">
         <div className="flex items-center gap-5 px-10 py-8">
           {imageUrl && (

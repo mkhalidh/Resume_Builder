@@ -27,7 +27,7 @@ const MinimalTemplate = ({ data, imageUrl }) => {
   );
 
   return (
-    <div className="bg-white shadow-md overflow-hidden px-12 py-12">
+    <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden px-12 py-12">
       <div className="flex items-center gap-6 mb-10 pb-8 border-b border-ink/10">
         <img
           src={imageUrl}
