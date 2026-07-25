@@ -1,12 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Menu, X } from "lucide-react";
+import { FileText, Menu, X, UserCircle } from "lucide-react";
 
 const navLinks = [
   { label: "Templates", to: "/templates" },
   { label: "How it works", to: "/#features" },
   { label: "Examples", to: "/#examples" },
+  { label: "Articles", to: "/blog" },
 ];
+
+const GITHUB_URL = "https://github.com/mkhalidh/Resume_Builder";
+const DEVELOPER_URL = "https://web-sepia-zeta-76e1668kme.vercel.app/";
+
+// lucide-react doesn't ship a GitHub mark, so this is the standard GitHub
+// octocat logo as an inline SVG.
+const GithubIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.755-1.333-1.755-1.089-.744.084-.729.084-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.896-.014 3.286 0 .322.216.694.825.576 4.765-1.589 8.199-6.085 8.199-11.385 0-6.627-5.373-12-12-12z" />
+  </svg>
+);
 
 const SiteHeader = () => {
   const [open, setOpen] = useState(false);
@@ -36,7 +48,25 @@ const SiteHeader = () => {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-4">
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-body text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+          >
+            <GithubIcon className="w-4 h-4" />
+            Contribute here
+          </a>
+          <a
+            href={DEVELOPER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-body text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+          >
+            <UserCircle className="w-4 h-4" />
+            About developer
+          </a>
           <Link
             to="/templates"
             className="font-body font-medium text-sm bg-jade text-white px-5 py-2.5 rounded-full hover:bg-jade/90 transition-colors"
@@ -67,6 +97,24 @@ const SiteHeader = () => {
               {link.label}
             </Link>
           ))}
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-body text-sm font-medium text-ink/70"
+          >
+            <GithubIcon className="w-4 h-4" />
+            Contribute here
+          </a>
+          <a
+            href={DEVELOPER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-body text-sm font-medium text-ink/70"
+          >
+            <UserCircle className="w-4 h-4" />
+            About developer
+          </a>
           <Link
             to="/templates"
             onClick={() => setOpen(false)}

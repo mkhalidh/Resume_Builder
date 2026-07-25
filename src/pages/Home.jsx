@@ -27,8 +27,10 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { templates } from "../templates";
+import { posts } from "../blog/posts";
 import Footer from "../components/Footer";
 import TemplatePreview from "../components/TemplatePreview";
+import { useSEO, SITE_URL } from "../hooks/useSEO";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,8 +43,6 @@ const heroStats = [
 ];
 
 const techStack = ["React", "Tailwind CSS", "GSAP", "React Router", "Vite"];
-
-const filterPills = ["All", "Modern", "Minimal", "Editorial", "ATS-Friendly", "Free"];
 
 const atsAreas = [
   {
@@ -219,24 +219,6 @@ const testimonials = [
   },
 ];
 
-const careerTips = [
-  {
-    gradient: "from-violet to-violet/60",
-    title: "How to Write a Resume Summary That Doesn't Sound Generic",
-    excerpt: "Skip the buzzwords — here's a simple formula for a summary that actually says something.",
-  },
-  {
-    gradient: "from-jade to-jade-600",
-    title: "The Only Resume Format Guide You Actually Need",
-    excerpt: "Reverse-chronological, functional, or hybrid? A quick guide to picking the right one.",
-  },
-  {
-    gradient: "from-indigo-400 to-indigo-600",
-    title: "20 Action Verbs to Replace “Responsible For”",
-    excerpt: "Small wording changes that make your bullet points read like accomplishments.",
-  },
-];
-
 const roadmapFeatures = [
   {
     icon: Target,
@@ -333,6 +315,63 @@ const RadarChart = ({ values = radarValues, size = 260 }) => {
   );
 };
 
+// Color schemes for the hero mockup's "Pick a style" swatches. Text colors
+// are chosen per-scheme for contrast (dark text on light backgrounds, white
+// text on dark ones) rather than a single fixed color for every swatch.
+const mockupThemes = [
+  {
+    id: "gold",
+    swatchClass: "bg-[#fdd147]",
+    accentBar: "#85680e",
+    headerBg: "#fee28a",
+    nameColor: "#423306",
+    roleColor: "#85680e",
+    avatarBorder: "#a17c07",
+    avatarBg: "#fff4d6",
+    cardBg: "#fef0c3",
+    cardLabelColor: "#8a7a4a",
+    cardHeadingColor: "#423306",
+    cardBarColor: "#e9d9a3",
+    sidebarBg: "#fdd147",
+    sidebarLabelColor: "#715a12",
+    sidebarBarColor: "#f0c94f",
+  },
+  {
+    id: "dark",
+    swatchClass: "bg-ink",
+    accentBar: "#000000",
+    headerBg: "#16181D",
+    nameColor: "#ffffff",
+    roleColor: "#5eead4",
+    avatarBorder: "#5eead4",
+    avatarBg: "#2a2d35",
+    cardBg: "#20232a",
+    cardLabelColor: "#9ca3af",
+    cardHeadingColor: "#ffffff",
+    cardBarColor: "#3a3f4a",
+    sidebarBg: "#0d0e11",
+    sidebarLabelColor: "#ffffff",
+    sidebarBarColor: "#3a3f4a",
+  },
+  {
+    id: "white",
+    swatchClass: "bg-white border-2 border-ink/10",
+    accentBar: "#e5e7eb",
+    headerBg: "#ffffff",
+    nameColor: "#16181D",
+    roleColor: "#6b7280",
+    avatarBorder: "#e5e7eb",
+    avatarBg: "#f3f4f6",
+    cardBg: "#f9fafb",
+    cardLabelColor: "#9ca3af",
+    cardHeadingColor: "#16181D",
+    cardBarColor: "#e5e7eb",
+    sidebarBg: "#f3f4f6",
+    sidebarLabelColor: "#374151",
+    sidebarBarColor: "#d1d5db",
+  },
+];
+
 const StarRow = ({ count = 5 }) => (
   <div className="flex items-center gap-0.5" aria-hidden="true">
     {Array.from({ length: count }).map((_, i) => (
@@ -345,6 +384,22 @@ const Home = () => {
   const heroRef = useRef(null);
   const mockupRef = useRef(null);
   const [selectedTemplate, setSelectedTemplate] = useState(templates[1].id);
+  const [mockupThemeId, setMockupThemeId] = useState(mockupThemes[0].id);
+  const mockupTheme =
+    mockupThemes.find((t) => t.id === mockupThemeId) || mockupThemes[0];
+
+  useSEO({
+    title: "resumebuilder — Free Resume Builder & ATS-Friendly Templates",
+    description:
+      "Build a polished, ATS-friendly resume in minutes with 9 free templates, live preview, and one-click PDF export. No sign-up required.",
+    path: "/",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "resumebuilder",
+      url: SITE_URL,
+    },
+  });
 
   const activeTemplate =
     templates.find((t) => t.id === selectedTemplate) || templates[0];
@@ -531,45 +586,99 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-white overflow-hidden">
-                <div className="bg-[#85680e] h-[3px]" />
-                <div className="flex items-center justify-between bg-[#fee28a] px-6 py-5">
+              <div className="rounded-2xl overflow-hidden transition-colors duration-300">
+                <div
+                  className="h-[3px] transition-colors duration-300"
+                  style={{ backgroundColor: mockupTheme.accentBar }}
+                />
+                <div
+                  className="flex items-center justify-between px-6 py-5 transition-colors duration-300"
+                  style={{ backgroundColor: mockupTheme.headerBg }}
+                >
                   <div>
-                    <p className="font-display font-bold text-[#423306] text-lg">
+                    <p
+                      className="font-display font-bold text-lg transition-colors duration-300"
+                      style={{ color: mockupTheme.nameColor }}
+                    >
                       Muhammad Khalid Hussain
                     </p>
-                    <p className="text-[#85680e] text-sm font-body">
+                    <p
+                      className="text-sm font-body transition-colors duration-300"
+                      style={{ color: mockupTheme.roleColor }}
+                    >
                       Software Engineer
                     </p>
                   </div>
-                  <div className="w-12 h-12 rounded-full border-2 border-[#a17c07] bg-[#fff4d6]" />
+                  <div
+                    className="w-12 h-12 rounded-full border-2 transition-colors duration-300"
+                    style={{
+                      borderColor: mockupTheme.avatarBorder,
+                      backgroundColor: mockupTheme.avatarBg,
+                    }}
+                  />
                 </div>
                 <div className="flex">
                   <div className="flex-1 p-5 space-y-3">
-                    <div className="rounded-xl bg-[#fef0c3] p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
+                    <div
+                      className="rounded-xl p-3 transition-colors duration-300"
+                      style={{ backgroundColor: mockupTheme.cardBg }}
+                    >
+                      <p
+                        className="text-[10px] uppercase tracking-wide font-body transition-colors duration-300"
+                        style={{ color: mockupTheme.cardLabelColor }}
+                      >
                         Experience
                       </p>
-                      <p className="text-[#423306] font-display font-semibold text-sm">
+                      <p
+                        className="font-display font-semibold text-sm transition-colors duration-300"
+                        style={{ color: mockupTheme.cardHeadingColor }}
+                      >
                         Frontend Engineer
                       </p>
-                      <div className="mt-1.5 h-1.5 w-4/5 rounded bg-[#e9d9a3]" />
+                      <div
+                        className="mt-1.5 h-1.5 w-4/5 rounded transition-colors duration-300"
+                        style={{ backgroundColor: mockupTheme.cardBarColor }}
+                      />
                     </div>
-                    <div className="rounded-xl bg-[#fef0c3] p-3">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
+                    <div
+                      className="rounded-xl p-3 transition-colors duration-300"
+                      style={{ backgroundColor: mockupTheme.cardBg }}
+                    >
+                      <p
+                        className="text-[10px] uppercase tracking-wide font-body transition-colors duration-300"
+                        style={{ color: mockupTheme.cardLabelColor }}
+                      >
                         Education
                       </p>
-                      <div className="mt-1.5 h-1.5 w-3/5 rounded bg-[#e9d9a3]" />
+                      <div
+                        className="mt-1.5 h-1.5 w-3/5 rounded transition-colors duration-300"
+                        style={{ backgroundColor: mockupTheme.cardBarColor }}
+                      />
                     </div>
                   </div>
-                  <div className="w-28 bg-[#fdd147] p-4">
-                    <p className="text-[#715a12] font-display font-bold text-xs mb-2">
+                  <div
+                    className="w-28 p-4 transition-colors duration-300"
+                    style={{ backgroundColor: mockupTheme.sidebarBg }}
+                  >
+                    <p
+                      className="font-display font-bold text-xs mb-2 transition-colors duration-300"
+                      style={{ color: mockupTheme.sidebarLabelColor }}
+                    >
                       Skills
                     </p>
                     <div className="space-y-1.5">
-                      <div className="h-1.5 rounded bg-[#f0c94f]" />
-                      <div className="h-1.5 w-4/5 rounded bg-[#f0c94f]" />
-                      <div className="h-1.5 w-3/5 rounded bg-[#f0c94f]" />
+                      <div
+                        className="h-1.5 rounded transition-colors duration-300"
+                        style={{ backgroundColor: mockupTheme.sidebarBarColor }}
+                      />
+                      <div
+                        className="h-1.5 w-4/5 rounded transition-colors duration-300"
+                        style={{ backgroundColor: mockupTheme.sidebarBarColor }}
+                      />
+                      <div
+                        className="h-1.5 w-3/5 rounded transition-colors duration-300"
+                        style={{ backgroundColor: mockupTheme.sidebarBarColor }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -581,9 +690,18 @@ const Home = () => {
                 Pick a style
               </p>
               <div className="flex gap-2">
-                <span className="w-7 h-7 rounded-lg bg-[#fdd147] border-2 border-white ring-2 ring-jade" />
-                <span className="w-7 h-7 rounded-lg bg-ink border-2 border-white" />
-                <span className="w-7 h-7 rounded-lg bg-white border-2 border-ink/10" />
+                {mockupThemes.map((theme) => (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    onClick={() => setMockupThemeId(theme.id)}
+                    aria-label={`Preview the ${theme.id} style`}
+                    aria-pressed={mockupThemeId === theme.id}
+                    className={`w-7 h-7 rounded-lg border-2 border-white transition-shadow ${theme.swatchClass} ${
+                      mockupThemeId === theme.id ? "ring-2 ring-jade" : ""
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -630,21 +748,7 @@ const Home = () => {
             section with your own content. Every template is free and built
             to pass applicant tracking systems.
           </p>
-          <div data-reveal className="flex flex-wrap gap-2.5 mb-12">
-            {filterPills.map((pill, i) => (
-              <span
-                key={pill}
-                className={`font-body text-sm px-4 py-2 rounded-full border ${
-                  i === 0
-                    ? "bg-jade text-white border-jade"
-                    : "border-jade/40 text-ink/60"
-                }`}
-              >
-                {pill}
-              </span>
-            ))}
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 mt-12">
             {templates.map(({ id, name, description, component: Template }) => (
               <div
                 key={id}
@@ -1104,24 +1208,33 @@ const Home = () => {
           <p data-reveal className="font-body text-ink/60 mb-12 max-w-xl">
             A few quick reads while your resume comes together.
           </p>
-          <div className="grid md:grid-cols-3 gap-8">
-            {careerTips.map((tip) => (
-              <div
-                key={tip.title}
+          <div className="grid md:grid-cols-3 gap-8 mb-10">
+            {posts.map((post) => (
+              <Link
+                key={post.slug}
+                to={`/blog/${post.slug}`}
                 data-reveal
-                className="bg-white rounded-2xl border border-black/5 overflow-hidden"
+                className="block bg-white rounded-2xl border border-black/5 overflow-hidden hover:shadow-md transition-shadow"
               >
-                <div className={`h-32 bg-gradient-to-br ${tip.gradient}`} />
+                <div className={`h-32 bg-gradient-to-br ${post.gradient}`} />
                 <div className="p-6">
                   <h3 className="font-display font-semibold text-ink text-lg mb-2 leading-snug">
-                    {tip.title}
+                    {post.title}
                   </h3>
                   <p className="font-body text-ink/60 text-sm leading-relaxed">
-                    {tip.excerpt}
+                    {post.excerpt}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
+          </div>
+          <div className="flex justify-center">
+            <Link
+              to="/blog"
+              className="font-body font-semibold text-ink px-7 py-3.5 rounded-full border border-ink/10 hover:border-ink/30 transition-colors"
+            >
+              Explore All Articles
+            </Link>
           </div>
         </div>
       </section>

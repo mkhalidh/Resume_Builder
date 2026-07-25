@@ -2,11 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { Check, Sparkles } from "lucide-react";
 import { templates } from "../templates";
 import TemplatePreview from "../components/TemplatePreview";
+import { useSEO } from "../hooks/useSEO";
 
 const trustPoints = ["Free forever", "No sign-up", "ATS-friendly"];
 
 const Templates = () => {
   const navigate = useNavigate();
+
+  useSEO({
+    title: "Free Resume Templates — 9 ATS-Friendly Designs | resumebuilder",
+    description:
+      "Browse 9 free, ATS-friendly resume templates — Modern, Minimal, Editorial, Corporate, and more. Live preview and one-click PDF export, no sign-up required.",
+    path: "/templates",
+  });
 
   return (
     <div className="bg-surface min-h-screen px-6 py-16 md:py-20">

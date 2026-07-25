@@ -8,13 +8,13 @@ const columns = [
       { label: "Templates", to: "/templates" },
       { label: "Builder", to: "/builder" },
       { label: "How it works", to: "/#features" },
-      { label: "Pricing", to: "/#pricing" },
+      { label: "Free forever", to: "/#free" },
     ],
   },
   {
     title: "Resources",
     links: [
-      { label: "Career blog", to: "/#blog" },
+      { label: "Career blog", to: "/blog" },
       { label: "Resume examples", to: "/#examples" },
       { label: "Cover letter tips", to: "/#" },
       { label: "Interview guides", to: "/#" },

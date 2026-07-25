@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ResumeForm from "../components/form/ResumeForm";
 import { getTemplate } from "../templates";
+import { useSEO } from "../hooks/useSEO";
 
 // Templates are built assuming a fixed desktop-width page (fixed sidebar/column
 // widths in px), so on a narrow phone screen they'd otherwise just squish into
@@ -17,6 +18,13 @@ const Builder = () => {
   const [searchParams] = useSearchParams();
   const template = getTemplate(searchParams.get("template"));
   const Template = template.component;
+
+  useSEO({
+    title: `Build Your Resume with the ${template.name} Template | resumebuilder`,
+    description:
+      "Fill in a simple form, watch your resume update live, then export a polished PDF in one click. Free, no sign-up required.",
+    path: "/builder",
+  });
 
   const [resumeData, setResumeData] = useState({
     name: "",
