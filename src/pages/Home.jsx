@@ -3,6 +3,15 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import {
+  LayoutGrid,
+  Type,
+  Palette,
+  SlidersHorizontal,
+  Download,
+  Check,
+  ArrowRight,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,14 +139,7 @@ const Home = () => {
                   key={point}
                   className="flex items-center gap-1.5 font-body text-sm text-ink/70"
                 >
-                  <svg
-                    viewBox="0 0 20 20"
-                    className="w-4 h-4 text-jade shrink-0"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.6 7.6a1 1 0 0 1-1.4 0L3.3 10a1 1 0 1 1 1.4-1.4l3.7 3.7 6.9-6.9a1 1 0 0 1 1.4-.1Z" />
-                  </svg>
+                  <Check className="w-4 h-4 text-jade shrink-0" strokeWidth={3} />
                   {point}
                   {i < trustPoints.length - 1 && (
                     <span className="text-ink/20 ml-1.5">·</span>
@@ -166,14 +168,7 @@ const Home = () => {
                 className="inline-flex items-center gap-2 font-body font-semibold bg-jade text-white px-7 py-3.5 rounded-full hover:bg-jade/90 transition-colors"
               >
                 Create your resume
-                <svg
-                  viewBox="0 0 20 20"
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M11.3 4.3a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4l-5 5a1 1 0 0 1-1.4-1.4L14.6 11H4a1 1 0 1 1 0-2h10.6l-3.3-3.3a1 1 0 0 1 0-1.4Z" />
-                </svg>
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <a
                 data-hero-cta
@@ -209,63 +204,81 @@ const Home = () => {
           </div>
 
           {/* Mockup built from the real builder's visual language */}
-          <div ref={mockupRef} className="relative md:rotate-2 md:scale-105">
-            <div className="rounded-3xl bg-white shadow-2xl shadow-ink/20 overflow-hidden border border-black/5">
-              <div className="flex items-center gap-2 px-5 py-3 bg-surface border-b border-black/5">
-                <span className="w-2.5 h-2.5 rounded-full bg-coral/60" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FFD166]/70" />
-                <span className="w-2.5 h-2.5 rounded-full bg-jade/60" />
-                <span className="font-body text-ink/40 text-xs ml-2">
-                  Live preview
-                </span>
-              </div>
-              <div className="bg-[#85680e] h-[3px]" />
-              <div className="flex items-center justify-between bg-[#fee28a] px-6 py-5">
-                <div>
-                  <p className="font-display font-bold text-[#423306] text-lg">
-                    Muhammad Khalid Hussain
-                  </p>
-                  <p className="text-[#85680e] text-sm font-body">
-                    Software Engineer
-                  </p>
+          <div
+            ref={mockupRef}
+            className="relative md:rotate-1 md:scale-105 lg:translate-x-6"
+          >
+            <div className="rounded-3xl bg-ink shadow-2xl shadow-ink/30 overflow-hidden border border-black/5 p-2.5">
+              {/* Editor toolbar */}
+              <div className="flex items-center justify-between px-3 py-2.5">
+                <div className="flex items-center gap-3 text-white/50">
+                  <LayoutGrid className="w-4 h-4" strokeWidth={2} />
+                  <Type className="w-4 h-4" strokeWidth={2} />
+                  <Palette className="w-4 h-4" strokeWidth={2} />
+                  <SlidersHorizontal className="w-4 h-4" strokeWidth={2} />
                 </div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#a17c07] bg-[#fff4d6]" />
-              </div>
-              <div className="flex">
-                <div className="flex-1 p-5 space-y-3">
-                  <div className="rounded-xl bg-[#fef0c3] p-3">
-                    <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
-                      Experience
-                    </p>
-                    <p className="text-[#423306] font-display font-semibold text-sm">
-                      Frontend Engineer
-                    </p>
-                    <div className="mt-1.5 h-1.5 w-4/5 rounded bg-[#e9d9a3]" />
-                  </div>
-                  <div className="rounded-xl bg-[#fef0c3] p-3">
-                    <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
-                      Education
-                    </p>
-                    <div className="mt-1.5 h-1.5 w-3/5 rounded bg-[#e9d9a3]" />
-                  </div>
+                <div className="flex items-center gap-1.5 bg-jade text-ink font-body font-semibold text-xs px-3 py-1.5 rounded-full">
+                  <Download className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  Download
                 </div>
-                <div className="w-28 bg-[#fdd147] p-4">
-                  <p className="text-[#715a12] font-display font-bold text-xs mb-2">
-                    Skills
-                  </p>
-                  <div className="space-y-1.5">
-                    <div className="h-1.5 rounded bg-[#f0c94f]" />
-                    <div className="h-1.5 w-4/5 rounded bg-[#f0c94f]" />
-                    <div className="h-1.5 w-3/5 rounded bg-[#f0c94f]" />
+              </div>
+
+              {/* Resume canvas */}
+              <div className="rounded-2xl bg-white overflow-hidden">
+                <div className="bg-[#85680e] h-[3px]" />
+                <div className="flex items-center justify-between bg-[#fee28a] px-6 py-5">
+                  <div>
+                    <p className="font-display font-bold text-[#423306] text-lg">
+                      Muhammad Khalid Hussain
+                    </p>
+                    <p className="text-[#85680e] text-sm font-body">
+                      Software Engineer
+                    </p>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border-2 border-[#a17c07] bg-[#fff4d6]" />
+                </div>
+                <div className="flex">
+                  <div className="flex-1 p-5 space-y-3">
+                    <div className="rounded-xl bg-[#fef0c3] p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
+                        Experience
+                      </p>
+                      <p className="text-[#423306] font-display font-semibold text-sm">
+                        Frontend Engineer
+                      </p>
+                      <div className="mt-1.5 h-1.5 w-4/5 rounded bg-[#e9d9a3]" />
+                    </div>
+                    <div className="rounded-xl bg-[#fef0c3] p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-gray-500 font-body">
+                        Education
+                      </p>
+                      <div className="mt-1.5 h-1.5 w-3/5 rounded bg-[#e9d9a3]" />
+                    </div>
+                  </div>
+                  <div className="w-28 bg-[#fdd147] p-4">
+                    <p className="text-[#715a12] font-display font-bold text-xs mb-2">
+                      Skills
+                    </p>
+                    <div className="space-y-1.5">
+                      <div className="h-1.5 rounded bg-[#f0c94f]" />
+                      <div className="h-1.5 w-4/5 rounded bg-[#f0c94f]" />
+                      <div className="h-1.5 w-3/5 rounded bg-[#f0c94f]" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl border border-black/5 px-5 py-3 hidden sm:block">
-              <p className="font-display font-bold text-ink text-sm">
-                resume.pdf
+
+            {/* Floating template-picker panel, echoing the editor's "swatches" affordance */}
+            <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl shadow-xl border border-black/5 px-5 py-4 hidden sm:block">
+              <p className="font-body text-ink/40 text-[11px] uppercase tracking-wide mb-2.5">
+                Pick a style
               </p>
-              <p className="text-ink/50 text-xs font-body">Ready to send</p>
+              <div className="flex gap-2">
+                <span className="w-7 h-7 rounded-lg bg-[#fdd147] border-2 border-white ring-2 ring-jade" />
+                <span className="w-7 h-7 rounded-lg bg-ink border-2 border-white" />
+                <span className="w-7 h-7 rounded-lg bg-white border-2 border-ink/10" />
+              </div>
             </div>
           </div>
         </div>

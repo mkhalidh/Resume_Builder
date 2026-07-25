@@ -7,8 +7,8 @@ export default {
         surface: "#FAFAF7",
         ink: "#16181D",
         jade: {
-          DEFAULT: "#0F9D6B",
-          50: "#EAF6F0",
+          DEFAULT: "#14B8A6",
+          50: "#E6FBF8",
         },
         coral: "#FF6B4A",
       },
