@@ -15,6 +15,17 @@ const Main = ({ data }) => {
         />
       ))}
 
+      {/* Projects Section */}
+      {data.projects?.map((project, index) => (
+        <Box
+          key={index}
+          title={index === 0 ? "P R O J E C T S" : ""}
+          mainHeading={project.mainHeading}
+          date={project.date}
+          description={project.description}
+        />
+      ))}
+
       {/* Education Section */}
       {data.education.map((education, index) => (
         <Box

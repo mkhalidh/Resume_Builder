@@ -74,6 +74,36 @@ const ModernTemplate = ({ data, imageUrl }) => {
           </div>
         </section>
 
+        {data.projects?.some((p) => p.mainHeading) && (
+          <section className="mb-10">
+            <h2 className="font-display font-bold text-ink text-lg tracking-widest uppercase mb-6 pb-2 border-b-2 border-jade-50">
+              Projects
+            </h2>
+            <div className="space-y-6">
+              {data.projects.map(
+                (project, i) =>
+                  project.mainHeading && (
+                    <div key={i} className="pl-4 border-l-2 border-jade-50">
+                      <h3 className="font-display font-semibold text-ink">
+                        {project.mainHeading}
+                      </h3>
+                      {project.date && (
+                        <p className="font-body text-ink/40 text-xs mb-2">
+                          {project.date}
+                        </p>
+                      )}
+                      {project.description && (
+                        <p className="font-body text-ink/70 text-sm leading-relaxed">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
+                  )
+              )}
+            </div>
+          </section>
+        )}
+
         <section>
           <h2 className="font-display font-bold text-ink text-lg tracking-widest uppercase mb-6 pb-2 border-b-2 border-jade-50">
             Education

@@ -9,8 +9,12 @@ export default {
         jade: {
           DEFAULT: "#14B8A6",
           50: "#E6FBF8",
+          100: "#CCF3EC",
+          600: "#0D9488",
         },
         coral: "#FF6B4A",
+        violet: "#8B5CF6",
+        gold: "#FBBF24",
       },
       fontFamily: {
         display: ["Poppins", "sans-serif"],

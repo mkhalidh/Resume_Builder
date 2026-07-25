@@ -26,6 +26,13 @@ const ResumeForm = ({ onSubmit }) => {
         description: Yup.string().required("Description is required"),
       })
     ),
+    projects: Yup.array().of(
+      Yup.object({
+        mainHeading: Yup.string().required("Project Name is required"),
+        date: Yup.string(),
+        description: Yup.string().required("Description is required"),
+      })
+    ),
     education: Yup.array().of(
       Yup.object({
         mainHeading: Yup.string().required("Degree is required"),
@@ -49,6 +56,7 @@ const ResumeForm = ({ onSubmit }) => {
         experiences: [
           { mainHeading: "", companyName: "", date: "", description: "" },
         ],
+        projects: [{ mainHeading: "", date: "", description: "" }],
         education: [{ mainHeading: "", schoolName: "", date: "" }],
         rightSidebar: {
           skills: [""],
@@ -168,6 +176,66 @@ const ResumeForm = ({ onSubmit }) => {
                       className={addButtonClass}
                     >
                       Add Experience
+                    </button>
+                  )}
+                </div>
+              )}
+            </FieldArray>
+          </div>
+
+          {/* Projects Section */}
+          <div>
+            <h2 className={sectionTitleClass}>Projects</h2>
+            <FieldArray name="projects">
+              {({ push, remove }) => (
+                <div>
+                  {values.projects.map((_, index) => (
+                    <div key={index} className={entryClass}>
+                      {values.projects.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className={removeButtonClass}
+                        >
+                          Remove
+                        </button>
+                      )}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <Field
+                          name={`projects[${index}].mainHeading`}
+                          placeholder="Project Name"
+                          className={inputClass}
+                        />
+                        <Field
+                          name={`projects[${index}].date`}
+                          placeholder="Date"
+                          className={inputClass}
+                        />
+                      </div>
+                      {errors.projects?.[index]?.mainHeading &&
+                        touched.projects?.[index]?.mainHeading && (
+                          <div className={errorClass}>
+                            {errors.projects[index].mainHeading}
+                          </div>
+                        )}
+                      <Field
+                        as="textarea"
+                        rows={3}
+                        name={`projects[${index}].description`}
+                        placeholder="Description"
+                        className={inputClass}
+                      />
+                    </div>
+                  ))}
+                  {values.projects.length < 5 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        push({ mainHeading: "", date: "", description: "" })
+                      }
+                      className={addButtonClass}
+                    >
+                      Add Project
                     </button>
                   )}
                 </div>

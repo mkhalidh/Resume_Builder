@@ -11,6 +11,14 @@ export const sampleResumeData = {
         "Built and shipped customer-facing features across the web app.",
     },
   ],
+  projects: [
+    {
+      mainHeading: "Personal Portfolio Site",
+      date: "2024",
+      description:
+        "Designed and built a personal portfolio using React and Tailwind CSS.",
+    },
+  ],
   education: [
     {
       mainHeading: "BS Computer Science",

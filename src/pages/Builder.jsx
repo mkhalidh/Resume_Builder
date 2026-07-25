@@ -17,6 +17,7 @@ const Builder = () => {
     experiences: [
       { mainHeading: "", companyName: "", date: "", description: "" },
     ],
+    projects: [{ mainHeading: "", date: "", description: "" }],
     education: [{ mainHeading: "", schoolName: "", date: "" }],
     rightSidebar: { skills: [""], tools: [""], languages: [""] },
   });

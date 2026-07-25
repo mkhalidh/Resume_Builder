@@ -54,6 +54,38 @@ const MinimalTemplate = ({ data, imageUrl }) => {
         </div>
       </section>
 
+      {data.projects?.some((p) => p.mainHeading) && (
+        <section className="mb-10">
+          <h2 className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-ink/40 mb-5">
+            Projects
+          </h2>
+          <div className="space-y-7">
+            {data.projects.map(
+              (project, i) =>
+                project.mainHeading && (
+                  <div key={i} className="grid grid-cols-[1fr_auto] gap-4">
+                    <div>
+                      <h3 className="font-display font-semibold text-ink">
+                        {project.mainHeading}
+                      </h3>
+                      {project.description && (
+                        <p className="font-body text-ink/70 text-sm leading-relaxed mt-1.5">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
+                    {project.date && (
+                      <p className="font-body text-ink/40 text-xs whitespace-nowrap">
+                        {project.date}
+                      </p>
+                    )}
+                  </div>
+                )
+            )}
+          </div>
+        </section>
+      )}
+
       <section className="mb-10">
         <h2 className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-ink/40 mb-5">
           Education
