@@ -1,5 +1,17 @@
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
+
+const inputClass =
+  "w-full px-4 py-3 border border-black/10 rounded-xl font-body text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-jade-50 focus:border-jade transition-colors";
+const errorClass = "text-coral text-xs mt-1 font-body";
+const sectionTitleClass = "font-display font-semibold text-ink text-xl mb-4";
+const addButtonClass =
+  "font-body text-sm font-semibold text-jade border border-jade/30 rounded-full px-5 py-2.5 hover:bg-jade-50 transition-colors";
+const removeButtonClass =
+  "absolute top-3 right-3 font-body text-xs font-medium text-coral hover:underline";
+const entryClass =
+  "relative space-y-3 p-5 rounded-xl bg-surface border border-black/5 mb-4";
+
 const ResumeForm = ({ onSubmit }) => {
   // Validation Schema using Yup
   const validationSchema = Yup.object({
@@ -48,82 +60,98 @@ const ResumeForm = ({ onSubmit }) => {
       onSubmit={onSubmit}
     >
       {({ values, setFieldValue, errors, touched }) => (
-        <Form className="p-10 space-y-8 bg-white shadow-lg rounded-lg">
+        <Form className="bg-white rounded-2xl border border-black/5 shadow-sm p-8 md:p-10 space-y-10">
           {/* Name and Designation Section */}
           <div>
-            <h2 className="text-3xl font-bold mb-4">Personal Information</h2>
-            <Field
-              name="name"
-              placeholder="Full Name"
-              className="input px-5 py-3  border w-[40%] border-gray-400 rounded-md mb-4"
-            />
-            {errors.name && touched.name && (
-              <div className="text-red-500 text-sm">{errors.name}</div>
-            )}
-            <Field
-              name="designation"
-              placeholder="Designation"
-              className="input px-5 py-3 w-[40%] border ml-10 border-gray-400 rounded-md mb-4"
-            />
-            {errors.designation && touched.designation && (
-              <div className="text-red-500 text-sm">{errors.designation}</div>
-            )}
+            <h2 className={sectionTitleClass}>Personal Information</h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Field name="name" placeholder="Full Name" className={inputClass} />
+                {errors.name && touched.name && (
+                  <div className={errorClass}>{errors.name}</div>
+                )}
+              </div>
+              <div>
+                <Field
+                  name="designation"
+                  placeholder="Designation"
+                  className={inputClass}
+                />
+                {errors.designation && touched.designation && (
+                  <div className={errorClass}>{errors.designation}</div>
+                )}
+              </div>
+            </div>
 
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              className="w-[50%] mb-4"
-              onChange={(e) => setFieldValue("image", e.currentTarget.files[0])}
-            />
+            <label className="flex items-center gap-3 mt-4 cursor-pointer">
+              <span className="font-body text-sm font-medium text-jade bg-jade-50 px-4 py-2.5 rounded-full hover:bg-jade/10 transition-colors">
+                Upload photo
+              </span>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) =>
+                  setFieldValue("image", e.currentTarget.files[0])
+                }
+              />
+              <span className="font-body text-xs text-ink/40">
+                {values.image ? values.image.name : "No file chosen"}
+              </span>
+            </label>
             {errors.image && touched.image && (
-              <div className="text-red-500 text-sm">{errors.image}</div>
+              <div className={errorClass}>{errors.image}</div>
             )}
           </div>
 
           {/* Experience Section */}
           <div>
-            <h2 className="text-3xl font-bold mb-4">Experience</h2>
+            <h2 className={sectionTitleClass}>Experience</h2>
             <FieldArray name="experiences">
               {({ push, remove }) => (
                 <div>
                   {values.experiences.map((_, index) => (
-                    <div key={index} className="space-y-4 mb-5">
-                      <Field
-                        name={`experiences[${index}].mainHeading`}
-                        placeholder="Job Title"
-                        className="input px-5 py-3 w-[40%] border mr-10 border-gray-400 rounded-md"
-                      />
+                    <div key={index} className={entryClass}>
+                      {values.experiences.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className={removeButtonClass}
+                        >
+                          Remove
+                        </button>
+                      )}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <Field
+                          name={`experiences[${index}].mainHeading`}
+                          placeholder="Job Title"
+                          className={inputClass}
+                        />
+                        <Field
+                          name={`experiences[${index}].companyName`}
+                          placeholder="Company Name"
+                          className={inputClass}
+                        />
+                      </div>
                       {errors.experiences?.[index]?.mainHeading &&
                         touched.experiences?.[index]?.mainHeading && (
-                          <div className="text-red-500 text-sm">
+                          <div className={errorClass}>
                             {errors.experiences[index].mainHeading}
                           </div>
                         )}
                       <Field
-                        name={`experiences[${index}].companyName`}
-                        placeholder="Company Name"
-                        className="input px-5 py-3 w-[40%] border border-gray-400 rounded-md"
-                      />
-                      <Field
                         name={`experiences[${index}].date`}
                         placeholder="Date"
-                        className="input px-5 py-3 w-[40%] mr-10 border border-gray-400 rounded-md"
+                        className={inputClass}
                       />
                       <Field
                         as="textarea"
+                        rows={3}
                         name={`experiences[${index}].description`}
                         placeholder="Description"
-                        className="input px-5 py-3 w-[85%] poppins-regular border border-gray-400 rounded-md mr-5"
+                        className={inputClass}
                       />
-                      <div></div>
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="bg-[#a17c07] hover:bg-[#423306] text-white px-4 py-2 rounded-md"
-                      >
-                        Remove Experience
-                      </button>
                     </div>
                   ))}
                   {values.experiences.length < 5 && (
@@ -137,7 +165,7 @@ const ResumeForm = ({ onSubmit }) => {
                           description: "",
                         })
                       }
-                      className="bg-[#fdd147] hover:bg-[#ca9a04]  text-white px-4 py-2 rounded-md"
+                      className={addButtonClass}
                     >
                       Add Experience
                     </button>
@@ -149,34 +177,38 @@ const ResumeForm = ({ onSubmit }) => {
 
           {/* Education Section */}
           <div>
-            <h2 className="text-3xl font-bold mb-4">Education</h2>
+            <h2 className={sectionTitleClass}>Education</h2>
             <FieldArray name="education">
               {({ push, remove }) => (
                 <div>
                   {values.education.map((_, index) => (
-                    <div key={index} className="space-y-4  mb-5">
-                      <Field
-                        name={`education[${index}].mainHeading`}
-                        placeholder="Degree"
-                        className="input px-5 py-3 w-[40%] mr-10  border border-gray-400 rounded-md"
-                      />
-                      <Field
-                        name={`education[${index}].schoolName`}
-                        placeholder="School Name"
-                        className="input px-5 py-3 w-[40%] border border-gray-400 rounded-md"
-                      />
+                    <div key={index} className={entryClass}>
+                      {values.education.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className={removeButtonClass}
+                        >
+                          Remove
+                        </button>
+                      )}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <Field
+                          name={`education[${index}].mainHeading`}
+                          placeholder="Degree"
+                          className={inputClass}
+                        />
+                        <Field
+                          name={`education[${index}].schoolName`}
+                          placeholder="School Name"
+                          className={inputClass}
+                        />
+                      </div>
                       <Field
                         name={`education[${index}].date`}
                         placeholder="Date"
-                        className="input px-5 py-3 w-[40%] mr-10 border border-gray-400 rounded-md"
+                        className={inputClass}
                       />
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="bg-[#a17c07] hover:bg-[#423306] text-white px-4 py-2 rounded-md"
-                      >
-                        Remove Education
-                      </button>
                     </div>
                   ))}
                   {values.education.length < 5 && (
@@ -185,7 +217,7 @@ const ResumeForm = ({ onSubmit }) => {
                       onClick={() =>
                         push({ mainHeading: "", schoolName: "", date: "" })
                       }
-                      className="bg-[#fdd147] hover:bg-[#ca9a04]   text-white px-4 py-2 rounded-md"
+                      className={addButtonClass}
                     >
                       Add Education
                     </button>
@@ -195,120 +227,58 @@ const ResumeForm = ({ onSubmit }) => {
             </FieldArray>
           </div>
 
-          {/* Skills Section */}
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Skills</h2>
-            <FieldArray name="rightSidebar.skills">
-              {({ push, remove }) => (
-                <div>
-                  {values.rightSidebar.skills.map((_, index) => (
-                    <div key={index} className="space-y-4 mb-5 ">
-                      <Field
-                        name={`rightSidebar.skills[${index}]`}
-                        placeholder="Skill"
-                        className="input px-5 py-3 w-[40%] border mr-10 border-gray-400 rounded-md"
-                      />
+          {/* Skills / Tools / Languages Sections */}
+          {[
+            { key: "skills", label: "Skills", placeholder: "Skill" },
+            { key: "tools", label: "Tools", placeholder: "Tool" },
+            { key: "languages", label: "Languages", placeholder: "Language" },
+          ].map(({ key, label, placeholder }) => (
+            <div key={key}>
+              <h2 className={sectionTitleClass}>{label}</h2>
+              <FieldArray name={`rightSidebar.${key}`}>
+                {({ push, remove }) => (
+                  <div>
+                    <div className="flex flex-wrap gap-3 mb-3">
+                      {values.rightSidebar[key].map((_, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Field
+                            name={`rightSidebar.${key}[${index}]`}
+                            placeholder={placeholder}
+                            className={`${inputClass} w-40`}
+                          />
+                          {values.rightSidebar[key].length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => remove(index)}
+                              className="font-body text-xs font-medium text-coral hover:underline"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {values.rightSidebar[key].length < 10 && (
                       <button
                         type="button"
-                        onClick={() => remove(index)}
-                        className="bg-[#a17c07] hover:bg-[#423306] text-white px-4 py-2 rounded-md"
+                        onClick={() => push("")}
+                        className={addButtonClass}
                       >
-                        Remove Skill
+                        Add {label.slice(0, -1)}
                       </button>
-                    </div>
-                  ))}
-                  {values.rightSidebar.skills.length < 10 && (
-                    <button
-                      type="button"
-                      onClick={() => push("")}
-                      className="bg-[#fdd147] hover:bg-[#ca9a04]    text-white px-4 py-2 rounded-md"
-                    >
-                      Add Skill
-                    </button>
-                  )}
-                </div>
-              )}
-            </FieldArray>
-          </div>
-
-          {/* Tools Section */}
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Tools</h2>
-            <FieldArray name="rightSidebar.tools">
-              {({ push, remove }) => (
-                <div>
-                  {values.rightSidebar.tools.map((_, index) => (
-                    <div key={index} className="space-y-4 mb-5">
-                      <Field
-                        name={`rightSidebar.tools[${index}]`}
-                        placeholder="Tool"
-                        className="input px-5 py-3 w-[40%] border mr-10 border-gray-400 rounded-md"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="bg-[#a17c07] hover:bg-[#423306] text-white px-4 py-2 rounded-md"
-                      >
-                        Remove Tool
-                      </button>
-                    </div>
-                  ))}
-                  {values.rightSidebar.tools.length < 10 && (
-                    <button
-                      type="button"
-                      onClick={() => push("")}
-                      className="bg-[#fdd147] hover:bg-[#ca9a04]  text-white px-4 py-2 rounded-md"
-                    >
-                      Add Tool
-                    </button>
-                  )}
-                </div>
-              )}
-            </FieldArray>
-          </div>
-
-          {/* Languages Section */}
-          <div>
-            <h2 className="text-3xl font-bold mb-4">Languages</h2>
-            <FieldArray name="rightSidebar.languages">
-              {({ push, remove }) => (
-                <div>
-                  {values.rightSidebar.languages.map((_, index) => (
-                    <div key={index} className="space-y-4 mb-5">
-                      <Field
-                        name={`rightSidebar.languages[${index}]`}
-                        placeholder="Language"
-                        className="input px-5 py-3 w-[40%] mr-10 border border-gray-400 rounded-md"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="bg-[#a17c07] hover:bg-[#423306] text-white px-4 py-2 rounded-md"
-                      >
-                        Remove Language
-                      </button>
-                    </div>
-                  ))}
-                  {values.rightSidebar.languages.length < 10 && (
-                    <button
-                      type="button"
-                      onClick={() => push("")}
-                      className="bg-[#fdd147] hover:bg-[#ca9a04]   text-white px-4 py-2 rounded-md"
-                    >
-                      Add Language
-                    </button>
-                  )}
-                </div>
-              )}
-            </FieldArray>
-          </div>
+                    )}
+                  </div>
+                )}
+              </FieldArray>
+            </div>
+          ))}
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-[#fee28a] text-[#715a12] hover:bg-[#eab308]  px-6 py-3 rounded-md mt-6 w-[50%]"
+            className="w-full font-body font-semibold bg-jade text-white px-8 py-3.5 rounded-full hover:bg-jade/90 transition-colors"
           >
-            Submit
+            Update Preview
           </button>
         </Form>
       )}

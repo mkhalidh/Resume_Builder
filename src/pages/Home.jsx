@@ -6,6 +6,16 @@ import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const trustPoints = ["Free forever", "No sign-up", "Export as PDF"];
+
+const heroStats = [
+  { value: "3", label: "templates to pick from" },
+  { value: "1-click", label: "PDF export" },
+  { value: "$0", label: "cost, always" },
+];
+
+const builtWith = ["React", "Tailwind CSS", "GSAP", "Vite"];
+
 const features = [
   {
     title: "Live preview",
@@ -100,22 +110,40 @@ const Home = () => {
     <div ref={heroRef} className="bg-surface">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-jade-50 via-surface to-[#FFE9E0]" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-jade-50 via-surface to-[#FFE4DA]" />
         <div
-          className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-jade/20 blur-3xl -z-10"
+          className="absolute -top-32 -left-32 w-[30rem] h-[30rem] rounded-full bg-jade/25 blur-3xl -z-10"
           aria-hidden="true"
         />
         <div
-          className="absolute top-10 -right-24 w-80 h-80 rounded-full bg-coral/15 blur-3xl -z-10"
+          className="absolute top-0 -right-24 w-96 h-96 rounded-full bg-coral/20 blur-3xl -z-10"
           aria-hidden="true"
         />
-        <div className="max-w-6xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 grid md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-6xl mx-auto px-6 pt-14 pb-24 md:pt-20 md:pb-32 grid md:grid-cols-2 gap-16 items-center">
           <div>
             <div
               data-hero-badge
-              className="inline-flex items-center gap-2 bg-jade-50 text-jade font-body text-sm font-medium px-4 py-2 rounded-full mb-6"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-6"
             >
-              Free. No account needed.
+              {trustPoints.map((point, i) => (
+                <span
+                  key={point}
+                  className="flex items-center gap-1.5 font-body text-sm text-ink/70"
+                >
+                  <svg
+                    viewBox="0 0 20 20"
+                    className="w-4 h-4 text-jade shrink-0"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.6 7.6a1 1 0 0 1-1.4 0L3.3 10a1 1 0 1 1 1.4-1.4l3.7 3.7 6.9-6.9a1 1 0 0 1 1.4-.1Z" />
+                  </svg>
+                  {point}
+                  {i < trustPoints.length - 1 && (
+                    <span className="text-ink/20 ml-1.5">·</span>
+                  )}
+                </span>
+              ))}
             </div>
             <h1
               data-hero-heading
@@ -126,18 +154,26 @@ const Home = () => {
             </h1>
             <p
               data-hero-sub
-              className="font-body text-lg text-ink/60 mb-10 max-w-md"
+              className="font-body text-lg text-ink/60 mb-8 max-w-md"
             >
               Fill in a simple form, watch your resume take shape as you
               type, then download a polished PDF in one click.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-4 mb-3">
               <Link
                 data-hero-cta
                 to="/templates"
-                className="font-body font-semibold bg-jade text-white px-7 py-3.5 rounded-full hover:bg-jade/90 transition-colors"
+                className="inline-flex items-center gap-2 font-body font-semibold bg-jade text-white px-7 py-3.5 rounded-full hover:bg-jade/90 transition-colors"
               >
                 Create your resume
+                <svg
+                  viewBox="0 0 20 20"
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M11.3 4.3a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4l-5 5a1 1 0 0 1-1.4-1.4L14.6 11H4a1 1 0 1 1 0-2h10.6l-3.3-3.3a1 1 0 0 1 0-1.4Z" />
+                </svg>
               </Link>
               <a
                 data-hero-cta
@@ -147,11 +183,34 @@ const Home = () => {
                 See how it works
               </a>
             </div>
+            <p
+              data-hero-cta
+              className="font-body text-sm text-ink/40 mb-10"
+            >
+              No sign-up. No credit card. Just a finished resume.
+            </p>
+
+            <div className="grid grid-cols-3 gap-3 max-w-md">
+              {heroStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  data-hero-cta
+                  className="bg-white rounded-xl border border-black/5 shadow-sm px-3 py-4"
+                >
+                  <p className="font-display font-bold text-ink text-lg leading-none mb-1.5">
+                    {stat.value}
+                  </p>
+                  <p className="font-body text-ink/50 text-xs leading-snug">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Mockup built from the real builder's visual language */}
-          <div ref={mockupRef} className="relative">
-            <div className="rounded-3xl bg-white shadow-2xl shadow-ink/10 overflow-hidden border border-black/5">
+          <div ref={mockupRef} className="relative md:rotate-2 md:scale-105">
+            <div className="rounded-3xl bg-white shadow-2xl shadow-ink/20 overflow-hidden border border-black/5">
               <div className="flex items-center gap-2 px-5 py-3 bg-surface border-b border-black/5">
                 <span className="w-2.5 h-2.5 rounded-full bg-coral/60" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#FFD166]/70" />
@@ -208,6 +267,25 @@ const Home = () => {
               </p>
               <p className="text-ink/50 text-xs font-body">Ready to send</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Built with */}
+      <section className="px-6 pb-16 md:pb-20">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-ink/35 mb-6">
+            Built in the open with
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
+            {builtWith.map((tech) => (
+              <span
+                key={tech}
+                className="font-display font-semibold text-ink/30 text-xl"
+              >
+                {tech}
+              </span>
+            ))}
           </div>
         </div>
       </section>

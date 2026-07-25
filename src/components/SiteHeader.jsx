@@ -10,6 +10,20 @@ const SiteHeader = () => {
             Resume Builder
           </span>
         </Link>
+        <nav className="hidden md:flex items-center gap-8">
+          <Link
+            to="/templates"
+            className="font-body text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+          >
+            Templates
+          </Link>
+          <a
+            href="/#features"
+            className="font-body text-sm font-medium text-ink/70 hover:text-ink transition-colors"
+          >
+            How it works
+          </a>
+        </nav>
         <Link
           to="/templates"
           className="font-body font-medium text-sm bg-jade text-white px-5 py-2.5 rounded-full hover:bg-jade/90 transition-colors"
