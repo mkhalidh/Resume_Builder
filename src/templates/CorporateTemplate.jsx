@@ -90,7 +90,7 @@ const CorporateTemplate = ({ data, imageUrl }) => {
                       {project.date}
                     </p>
                     <div>
-                      <h3 className="font-display font-semibold text-ink">
+                      <h3 className="font-display font-semibold text-ink text-base">
                         {project.mainHeading}
                       </h3>
                       {project.description && (

@@ -1,6 +1,30 @@
+const TagGroup = ({ label, items }) => {
+  const list = items?.filter(Boolean);
+  if (!list?.length) return null;
+  return (
+    <div className="mb-5 last:mb-0">
+      <p className="font-body text-[10px] uppercase tracking-wide text-ink/40 mb-2">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {list.map((tag, i) => (
+          <span
+            key={i}
+            className="font-body text-xs text-ink/70 border border-ink/15 rounded-full px-3 py-1"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const MinimalTemplate = ({ data, imageUrl }) => {
   const { skills, tools, languages } = data.rightSidebar;
-  const tags = [...skills, ...tools, ...languages].filter(Boolean);
+  const hasTags = [skills, tools, languages].some((group) =>
+    group?.some(Boolean)
+  );
 
   return (
     <div className="bg-white shadow-md overflow-hidden px-12 py-12">
@@ -115,21 +139,14 @@ const MinimalTemplate = ({ data, imageUrl }) => {
         </div>
       </section>
 
-      {tags.length > 0 && (
+      {hasTags && (
         <section>
           <h2 className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-ink/40 mb-5">
             Skills &amp; Tools
           </h2>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag, i) => (
-              <span
-                key={i}
-                className="font-body text-xs text-ink/70 border border-ink/15 rounded-full px-3 py-1"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <TagGroup label="Skills" items={skills} />
+          <TagGroup label="Tools" items={tools} />
+          <TagGroup label="Languages" items={languages} />
         </section>
       )}
     </div>

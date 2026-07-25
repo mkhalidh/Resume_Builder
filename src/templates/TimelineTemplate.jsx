@@ -18,9 +18,33 @@ const TimelineSection = ({ title, items, renderItem }) => {
   );
 };
 
+const TagGroup = ({ label, items }) => {
+  const list = items?.filter(Boolean);
+  if (!list?.length) return null;
+  return (
+    <div className="mb-5 last:mb-0 text-center">
+      <p className="font-body text-[10px] uppercase tracking-widest text-ink/40 mb-2.5">
+        {label}
+      </p>
+      <div className="flex flex-wrap justify-center gap-2">
+        {list.map((tag, i) => (
+          <span
+            key={i}
+            className="font-body text-xs text-jade bg-jade-50 rounded-full px-3 py-1.5"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const TimelineTemplate = ({ data, imageUrl }) => {
   const { skills, tools, languages } = data.rightSidebar || {};
-  const tags = [...(skills || []), ...(tools || []), ...(languages || [])].filter(Boolean);
+  const hasTags = [skills, tools, languages].some((group) =>
+    group?.some(Boolean)
+  );
 
   return (
     <div className="bg-white shadow-md overflow-hidden px-12 py-12 max-w-2xl mx-auto">
@@ -111,21 +135,14 @@ const TimelineTemplate = ({ data, imageUrl }) => {
         )}
       />
 
-      {tags.length > 0 && (
+      {hasTags && (
         <section>
-          <h2 className="font-display font-bold text-ink text-sm uppercase tracking-widest mb-5">
+          <h2 className="font-display font-bold text-ink text-sm uppercase tracking-widest mb-5 text-center">
             Skills &amp; Languages
           </h2>
-          <div className="flex flex-wrap justify-center gap-2">
-            {tags.map((tag, i) => (
-              <span
-                key={i}
-                className="font-body text-xs text-jade bg-jade-50 rounded-full px-3 py-1.5"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <TagGroup label="Skills" items={skills} />
+          <TagGroup label="Tools" items={tools} />
+          <TagGroup label="Languages" items={languages} />
         </section>
       )}
     </div>

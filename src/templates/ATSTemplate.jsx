@@ -1,6 +1,10 @@
 const ATSTemplate = ({ data }) => {
   const { skills, tools, languages } = data.rightSidebar || {};
-  const tags = [...(skills || []), ...(tools || []), ...(languages || [])].filter(Boolean);
+  const groups = [
+    { label: "Skills", items: skills },
+    { label: "Tools", items: tools },
+    { label: "Languages", items: languages },
+  ].filter((group) => group.items?.some(Boolean));
 
   return (
     <div className="bg-white px-12 py-10 font-body text-ink">
@@ -74,14 +78,16 @@ const ATSTemplate = ({ data }) => {
         </div>
       </section>
 
-      {tags.length > 0 && (
-        <section>
+      {groups.map((group) => (
+        <section key={group.label} className="mb-6 last:mb-0">
           <h2 className="font-body font-bold text-xs uppercase tracking-wide mb-3">
-            Skills
+            {group.label}
           </h2>
-          <p className="text-sm text-ink/80">{tags.join(", ")}</p>
+          <p className="text-sm text-ink/80">
+            {group.items.filter(Boolean).join(", ")}
+          </p>
         </section>
-      )}
+      ))}
     </div>
   );
 };
