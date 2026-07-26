@@ -320,23 +320,6 @@ const RadarChart = ({ values = radarValues, size = 260 }) => {
 // text on dark ones) rather than a single fixed color for every swatch.
 const mockupThemes = [
   {
-    id: "gold",
-    swatchClass: "bg-[#fdd147]",
-    accentBar: "#85680e",
-    headerBg: "#fee28a",
-    nameColor: "#423306",
-    roleColor: "#85680e",
-    avatarBorder: "#a17c07",
-    avatarBg: "#fff4d6",
-    cardBg: "#fef0c3",
-    cardLabelColor: "#8a7a4a",
-    cardHeadingColor: "#423306",
-    cardBarColor: "#e9d9a3",
-    sidebarBg: "#fdd147",
-    sidebarLabelColor: "#715a12",
-    sidebarBarColor: "#f0c94f",
-  },
-  {
     id: "dark",
     swatchClass: "bg-ink",
     accentBar: "#000000",
@@ -354,8 +337,25 @@ const mockupThemes = [
     sidebarBarColor: "#3a3f4a",
   },
   {
+    id: "gold",
+    swatchClass: "bg-[#fdd147]",
+    accentBar: "#85680e",
+    headerBg: "#fee28a",
+    nameColor: "#423306",
+    roleColor: "#85680e",
+    avatarBorder: "#a17c07",
+    avatarBg: "#fff4d6",
+    cardBg: "#fef0c3",
+    cardLabelColor: "#8a7a4a",
+    cardHeadingColor: "#423306",
+    cardBarColor: "#e9d9a3",
+    sidebarBg: "#fdd147",
+    sidebarLabelColor: "#715a12",
+    sidebarBarColor: "#f0c94f",
+  },
+  {
     id: "white",
-    swatchClass: "bg-white border-2 border-ink/10",
+    swatchClass: "bg-[#f3f4f6] border-2 border-ink/10",
     accentBar: "#e5e7eb",
     headerBg: "#ffffff",
     nameColor: "#16181D",
@@ -384,7 +384,7 @@ const Home = () => {
   const heroRef = useRef(null);
   const mockupRef = useRef(null);
   const [selectedTemplate, setSelectedTemplate] = useState(templates[1].id);
-  const [mockupThemeId, setMockupThemeId] = useState(mockupThemes[0].id);
+  const [mockupThemeId, setMockupThemeId] = useState("dark");
   const mockupTheme =
     mockupThemes.find((t) => t.id === mockupThemeId) || mockupThemes[0];
 
