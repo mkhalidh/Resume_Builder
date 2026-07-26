@@ -2,7 +2,12 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 import { getPost, getRelatedPosts } from "../blog/posts";
 import Footer from "../components/Footer";
+import { GithubIcon, LinkedinIcon } from "../components/BrandIcons";
 import { useSEO, SITE_URL } from "../hooks/useSEO";
+
+const AUTHOR_NAME = "Muhammad Khalid Hussain";
+const LINKEDIN_URL = "https://www.linkedin.com/in/muhammad-khalid-hussain-384752202/";
+const GITHUB_PROFILE_URL = "https://github.com/mkhalidh/";
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -20,7 +25,11 @@ const BlogPost = () => {
           headline: post.title,
           description: post.excerpt,
           datePublished: post.datePublished,
-          author: { "@type": "Organization", name: "resumebuilder" },
+          author: {
+            "@type": "Person",
+            name: AUTHOR_NAME,
+            url: LINKEDIN_URL,
+          },
           publisher: { "@type": "Organization", name: "resumebuilder" },
           mainEntityOfPage: `${SITE_URL}/blog/${slug}`,
         }
@@ -45,9 +54,35 @@ const BlogPost = () => {
         <p className="font-body text-ink/40 text-xs uppercase tracking-wide mb-3">
           {post.readTime}
         </p>
-        <h1 className="font-display font-extrabold text-ink text-3xl md:text-4xl leading-tight mb-10">
+        <h1 className="font-display font-extrabold text-ink text-3xl md:text-4xl leading-tight mb-5">
           {post.title}
         </h1>
+
+        <div className="flex items-center gap-3 mb-10">
+          <p className="font-body text-ink/50 text-sm">
+            Written by <span className="text-ink/70">{AUTHOR_NAME}</span>
+          </p>
+          <div className="flex items-center gap-2">
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Muhammad Khalid Hussain on LinkedIn"
+              className="text-ink/40 hover:text-ink transition-colors"
+            >
+              <LinkedinIcon className="w-4 h-4" />
+            </a>
+            <a
+              href={GITHUB_PROFILE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Muhammad Khalid Hussain on GitHub"
+              className="text-ink/40 hover:text-ink transition-colors"
+            >
+              <GithubIcon className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
 
         <div className="space-y-8">
           {post.sections.map((section) => (

@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { FileText, Globe, Mail, Link2, Share2 } from "lucide-react";
+import { FileText } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "./BrandIcons";
+
+const LINKEDIN_URL = "https://www.linkedin.com/in/muhammad-khalid-hussain-384752202/";
+const GITHUB_PROFILE_URL = "https://github.com/mkhalidh/";
 
 const columns = [
   {
@@ -39,10 +43,8 @@ const columns = [
 ];
 
 const socials = [
-  { icon: Globe, label: "Website" },
-  { icon: Mail, label: "Email" },
-  { icon: Link2, label: "Links" },
-  { icon: Share2, label: "Share" },
+  { icon: GithubIcon, label: "GitHub", href: GITHUB_PROFILE_URL },
+  { icon: LinkedinIcon, label: "LinkedIn", href: LINKEDIN_URL },
 ];
 
 const Footer = () => {
@@ -89,18 +91,29 @@ const Footer = () => {
 
         <div className="pt-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
           <p className="font-body text-white/40 text-sm">
-            &copy; {new Date().getFullYear()} resumebuilder. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} resumebuilder. Built by{" "}
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/60 hover:text-white transition-colors underline underline-offset-2"
+            >
+              Muhammad Khalid Hussain
+            </a>
+            .
           </p>
           <div className="flex items-center gap-3">
-            {socials.map(({ icon: Icon, label }) => (
-              <span
+            {socials.map(({ icon: Icon, label, href }) => (
+              <a
                 key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors"
               >
                 <Icon className="w-4 h-4" />
-              </span>
+              </a>
             ))}
           </div>
         </div>

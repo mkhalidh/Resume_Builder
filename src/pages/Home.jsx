@@ -30,6 +30,7 @@ import { templates } from "../templates";
 import { posts } from "../blog/posts";
 import Footer from "../components/Footer";
 import TemplatePreview from "../components/TemplatePreview";
+import { GithubIcon, LinkedinIcon } from "../components/BrandIcons";
 import { useSEO, SITE_URL } from "../hooks/useSEO";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -1320,6 +1321,38 @@ const Home = () => {
           >
             Create your resume
           </Link>
+
+          <div className="flex items-center justify-center gap-3 mt-10 pt-8 border-t border-white/10">
+            <p className="font-body text-white/40 text-sm">
+              Built by{" "}
+              <a
+                href="https://www.linkedin.com/in/muhammad-khalid-hussain-384752202/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/70 hover:text-white transition-colors underline underline-offset-2"
+              >
+                Muhammad Khalid Hussain
+              </a>
+            </p>
+            <a
+              href="https://www.linkedin.com/in/muhammad-khalid-hussain-384752202/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="text-white/40 hover:text-white transition-colors"
+            >
+              <LinkedinIcon className="w-4 h-4" />
+            </a>
+            <a
+              href="https://github.com/mkhalidh/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="text-white/40 hover:text-white transition-colors"
+            >
+              <GithubIcon className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </section>
 
