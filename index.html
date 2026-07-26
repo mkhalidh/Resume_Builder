@@ -19,6 +19,18 @@
     <meta name="twitter:title" content="resumebuilder — Free Resume Builder & ATS-Friendly Templates" />
     <meta name="twitter:description" content="Build a polished, ATS-friendly resume in minutes with 9 free templates, live preview, and one-click PDF export. No sign-up required." />
 
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZQ95L5LNJ7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      // send_page_view is off here because this is a client-routed SPA —
+      // src/App.jsx sends a page_view on every route change instead, so a
+      // single-page visit that browses to 3 routes shows as 3 pageviews.
+      gtag("config", "G-ZQ95L5LNJ7", { send_page_view: false });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />

@@ -29,10 +29,29 @@ const ScrollToHash = () => {
   return null;
 };
 
+// GA4's automatic page_view only fires once, on the initial full page load
+// (send_page_view is disabled in index.html) — since this is a client-routed
+// SPA, every route change needs its own page_view sent manually.
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", "page_view", {
+      page_path: location.pathname + location.search + location.hash,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  }, [location.pathname, location.search, location.hash]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <>
       <ScrollToHash />
+      <AnalyticsTracker />
       <SiteHeader />
       <Routes>
         <Route path="/" element={<Home />} />
