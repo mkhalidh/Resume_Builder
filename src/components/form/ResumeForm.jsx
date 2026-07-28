@@ -1,5 +1,7 @@
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
+import { sampleResumeData } from "../../data/sampleResumeData";
+import { stressTestResumeData } from "../../data/stressTestResumeData";
 
 const inputClass =
   "w-full px-4 py-3 border border-black/10 rounded-xl font-body text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-jade-50 focus:border-jade transition-colors";
@@ -67,8 +69,39 @@ const ResumeForm = ({ onSubmit }) => {
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ values, setFieldValue, errors, touched }) => (
+      {({ values, setFieldValue, setValues, errors, touched }) => (
         <Form className="bg-white rounded-2xl border border-black/5 shadow-sm p-8 md:p-10 space-y-10">
+          {import.meta.env.DEV && (
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={async () => {
+                  const res = await fetch("/photo.png");
+                  const file = new File([await res.blob()], "photo.png", {
+                    type: "image/png",
+                  });
+                  setValues({ ...sampleResumeData, image: file });
+                }}
+                className="flex-1 font-body text-xs font-medium text-violet border border-dashed border-violet/40 rounded-xl px-4 py-2.5 hover:bg-violet/5 transition-colors"
+              >
+                ⚡ Fill Sample Data (dev only)
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const res = await fetch("/photo.png");
+                  const file = new File([await res.blob()], "photo.png", {
+                    type: "image/png",
+                  });
+                  setValues({ ...stressTestResumeData, image: file });
+                }}
+                className="flex-1 font-body text-xs font-medium text-gold border border-dashed border-gold/50 rounded-xl px-4 py-2.5 hover:bg-gold/10 transition-colors"
+              >
+                🧪 Fill Stress Test Data — max content, multi-page (dev only)
+              </button>
+            </div>
+          )}
+
           {/* Name and Designation Section */}
           <div>
             <h2 className={sectionTitleClass}>Personal Information</h2>
