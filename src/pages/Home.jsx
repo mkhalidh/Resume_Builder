@@ -31,6 +31,7 @@ import { posts } from "../blog/posts";
 import Footer from "../components/Footer";
 import TemplatePreview from "../components/TemplatePreview";
 import { GithubIcon, LinkedinIcon } from "../components/BrandIcons";
+import WhatsNewModal from "../components/WhatsNewModal";
 import { useSEO, SITE_URL } from "../hooks/useSEO";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -386,6 +387,7 @@ const Home = () => {
   const mockupRef = useRef(null);
   const [selectedTemplate, setSelectedTemplate] = useState(templates[1].id);
   const [mockupThemeId, setMockupThemeId] = useState("dark");
+  const [showWhatsNew, setShowWhatsNew] = useState(false);
   const mockupTheme =
     mockupThemes.find((t) => t.id === mockupThemeId) || mockupThemes[0];
 
@@ -1352,9 +1354,25 @@ const Home = () => {
             >
               <GithubIcon className="w-4 h-4" />
             </a>
+            <span className="text-white/20">·</span>
+            <p className="font-body text-white/40 text-sm">
+              v{__APP_VERSION__}
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowWhatsNew(true)}
+              className="font-body text-sm text-jade hover:text-jade/80 transition-colors underline underline-offset-2"
+            >
+              What&apos;s New
+            </button>
           </div>
         </div>
       </section>
+
+      <WhatsNewModal
+        open={showWhatsNew}
+        onClose={() => setShowWhatsNew(false)}
+      />
 
       <Footer />
     </div>

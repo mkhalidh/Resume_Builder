@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FileText, Menu, X, UserCircle } from "lucide-react";
 import { GithubIcon } from "./BrandIcons";
+import WhatsNewModal from "./WhatsNewModal";
 
 const navLinks = [
   { label: "Templates", to: "/templates" },
@@ -15,6 +16,7 @@ const DEVELOPER_URL = "https://web-sepia-zeta-76e1668kme.vercel.app/";
 
 const SiteHeader = () => {
   const [open, setOpen] = useState(false);
+  const [showWhatsNew, setShowWhatsNew] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-black/5">
@@ -42,6 +44,13 @@ const SiteHeader = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setShowWhatsNew(true)}
+            className="font-body text-sm font-medium text-ink/50 hover:text-ink transition-colors"
+          >
+            v{__APP_VERSION__}
+          </button>
           <a
             href={GITHUB_URL}
             target="_blank"
@@ -115,8 +124,23 @@ const SiteHeader = () => {
           >
             Create Resume
           </Link>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setShowWhatsNew(true);
+            }}
+            className="font-body text-sm font-medium text-ink/50 text-left"
+          >
+            v{__APP_VERSION__} · What&apos;s New
+          </button>
         </div>
       )}
+
+      <WhatsNewModal
+        open={showWhatsNew}
+        onClose={() => setShowWhatsNew(false)}
+      />
     </header>
   );
 };
