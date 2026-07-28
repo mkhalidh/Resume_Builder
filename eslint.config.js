@@ -10,7 +10,12 @@ export default [
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        // Injected at build time by vite.config.js's `define`, from
+        // package.json's version field.
+        __APP_VERSION__: 'readonly',
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
@@ -35,6 +40,13 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+    },
+  },
+  {
+    // Vercel serverless functions run in Node, not the browser.
+    files: ['api/**/*.js'],
+    languageOptions: {
+      globals: globals.node,
     },
   },
 ]
