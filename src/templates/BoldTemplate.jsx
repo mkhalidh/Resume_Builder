@@ -1,5 +1,8 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const BoldTemplate = ({ data, imageUrl }) => {
   const { skills, tools, languages } = data.rightSidebar || {};
+  const displayImageUrl = useCroppedPhoto(imageUrl);
 
   return (
     <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
@@ -15,7 +18,7 @@ const BoldTemplate = ({ data, imageUrl }) => {
       <div className="px-12">
         {imageUrl && (
           <img
-            src={imageUrl}
+            src={displayImageUrl}
             className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg -mt-12 mb-8"
             alt="profile"
           />

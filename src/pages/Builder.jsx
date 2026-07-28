@@ -1,10 +1,13 @@
-import { useMemo, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useMemo, useState, useRef, useLayoutEffect } from "react";
+import { flushSync } from "react-dom";
 import { useSearchParams, Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ResumeForm from "../components/form/ResumeForm";
+import JobMatchPanel from "../components/JobMatchPanel";
 import { getTemplate } from "../templates";
 import { useSEO } from "../hooks/useSEO";
+import { computePageBreaks, measureResumeMm } from "../lib/computePageBreaks";
 
 // Templates are built assuming a fixed desktop-width page (fixed sidebar/column
 // widths in px), so on a narrow phone screen they'd otherwise just squish into
@@ -41,6 +44,11 @@ const Builder = () => {
   const resumeRef = useRef(); // Reference to the resume container
   const previewWrapperRef = useRef(); // Measures available width for scaling
   const [scale, setScale] = useState(1);
+  const [showJobMatch, setShowJobMatch] = useState(false);
+  // Internal page-break Y positions (mm from the top), so the preview can
+  // show exactly where the PDF export would split — computed with the same
+  // function handleDownload uses, so the two never disagree.
+  const [pageBreaksMm, setPageBreaksMm] = useState([]);
 
   useLayoutEffect(() => {
     const el = previewWrapperRef.current;
@@ -63,12 +71,66 @@ const Builder = () => {
     [resumeData.image]
   );
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const recompute = async () => {
+      await document.fonts.ready.catch(() => {});
+      // Let layout settle after the DOM update before measuring.
+      await new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      );
+      if (cancelled || !resumeRef.current) return;
+
+      const { headingTopsMm, totalHeightMm } = measureResumeMm(
+        resumeRef.current
+      );
+      const breaks = computePageBreaks({ headingTopsMm, totalHeightMm });
+      setPageBreaksMm(breaks.slice(1, -1)); // internal breaks only
+    };
+
+    recompute();
+    return () => {
+      cancelled = true;
+    };
+  }, [resumeData, imageUrl]);
+
   const handleFormSubmit = (values) => {
-    setResumeData(values);
+    // React batches this update and re-renders asynchronously by default —
+    // if "Download Resume" gets clicked quickly after "Update Preview", the
+    // download could start before the DOM actually reflects the new data,
+    // capturing a stale or half-updated resume (confirmed: this produced
+    // both a near-empty capture and a partially-old one in testing).
+    // flushSync forces the re-render to complete synchronously before this
+    // handler returns, so any later click is guaranteed to see current data.
+    flushSync(() => {
+      setResumeData(values);
+    });
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const input = resumeRef.current;
+
+    // html2canvas measures and lays out text itself rather than screenshotting
+    // pixels — if the Poppins/Inter webfonts haven't finished loading yet, it
+    // measures with fallback font metrics while the visible font-size is still
+    // correct, producing mismatched wrapping/spacing (oversized-looking,
+    // garbled headings) only in the exported file. Waiting here, with a short
+    // timeout as a safety net in case the fonts.ready promise never settles,
+    // avoids that race.
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 3000)),
+    ]);
+
+    // Measured on the live DOM, before capture — section headings (every
+    // template uses h2/h3 for these) mark points a page break should avoid
+    // landing just after. Without this, a heading like "Education" can end
+    // up alone at the very bottom of a page while its content spills onto
+    // an otherwise-empty next page, reading as if the section vanished.
+    // The same function drives the live preview's page-break indicator, so
+    // the two always agree on where a break will fall.
+    const { headingTopsMm } = measureResumeMm(input);
 
     html2canvas(input, {
       scale: window.devicePixelRatio, // Improves resolution
@@ -79,18 +141,59 @@ const Builder = () => {
       backgroundColor: "#ffffff", // html2canvas's own background auto-detection is unreliable
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
+      const pageWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-      // Adjusting PDF dimensions dynamically
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
-
-      const pdf = new jsPDF({
-        orientation: imgHeight > imgWidth ? "p" : "l", // Auto-orientation
-        unit: "mm",
-        format: [imgWidth, imgHeight], // Dynamically set size
+      const breaks = computePageBreaks({
+        headingTopsMm,
+        totalHeightMm: imgHeight,
       });
 
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      // A short trailing page (e.g. just an Education section pushed onto
+      // its own page) can end up wider than it is tall — jsPDF silently
+      // swaps width/height to match a forced "portrait" orientation in that
+      // case, corrupting the page into a tall, narrow strip instead of the
+      // intended short, wide one. Passing the orientation that actually
+      // matches each page's real shape avoids that swap entirely.
+      const orientationFor = (height) => (height >= pageWidth ? "p" : "l");
+
+      // Page 1 naturally starts with the template's own top padding (it's
+      // part of the captured image). A page 2+ is just a raw slice starting
+      // mid-content, so without this it has zero breathing room at the top
+      // — content butts right up against the physical page edge, unlike
+      // every other page. Adding a synthetic top margin there matches the
+      // feel of page 1's real padding.
+      //
+      // addImage always draws the *entire* image starting at the given Y —
+      // there's no way to tell it "start drawing partway down". Shifting the
+      // image down to make room for a margin doesn't create blank space, it
+      // just reveals more of the image *above* pageTop — i.e. the tail end
+      // of the previous page, duplicated. So the image still gets placed at
+      // its normal position; a white rectangle painted over the margin band
+      // afterward is what actually hides that overlap and reads as margin.
+      const CONTINUATION_TOP_MARGIN = 12;
+
+      const firstPageHeight = breaks[1] - breaks[0];
+      const pdf = new jsPDF({
+        unit: "mm",
+        format: [pageWidth, firstPageHeight],
+        orientation: orientationFor(firstPageHeight),
+      });
+
+      for (let i = 0; i < breaks.length - 1; i++) {
+        const pageTop = breaks[i];
+        const topMargin = i > 0 ? CONTINUATION_TOP_MARGIN : 0;
+        const thisPageHeight = breaks[i + 1] - pageTop + topMargin;
+        if (i > 0) {
+          pdf.addPage([pageWidth, thisPageHeight], orientationFor(thisPageHeight));
+        }
+        pdf.addImage(imgData, "PNG", 0, -pageTop + topMargin, pageWidth, imgHeight);
+        if (topMargin > 0) {
+          pdf.setFillColor(255, 255, 255);
+          pdf.rect(0, 0, pageWidth, topMargin, "F");
+        }
+      }
+
       pdf.save("resume.pdf");
     });
   };
@@ -112,20 +215,54 @@ const Builder = () => {
         </div>
       </div>
 
-      <div className="flex justify-center my-4">
+      <div className="flex justify-center gap-3 my-4">
         <button
           onClick={handleDownload}
           className="font-body font-semibold bg-jade text-white px-7 py-3.5 rounded-full hover:bg-jade/90 transition-colors"
         >
           Download Resume
         </button>
+        <button
+          onClick={() => setShowJobMatch((v) => !v)}
+          className="font-body font-semibold text-jade border border-jade px-7 py-3.5 rounded-full hover:bg-jade-50 transition-colors"
+        >
+          {showJobMatch ? "Hide Job Match" : "Match to a Job"}
+        </button>
       </div>
+
+      {showJobMatch && (
+        <div className="flex justify-center px-6 mb-4">
+          <div className="w-full max-w-2xl">
+            <JobMatchPanel resumeData={resumeData} />
+          </div>
+        </div>
+      )}
 
       {/* Resume Preview shown to the user — zoomed to fit the screen */}
       <div className="flex justify-center px-6 pb-16">
         <div ref={previewWrapperRef} className="w-full max-w-4xl">
-          <div style={{ width: PREVIEW_NATIVE_WIDTH, zoom: scale }}>
+          {pageBreaksMm.length > 0 && (
+            <p className="font-body text-xs text-ink/40 text-center mb-2">
+              Dashed lines show where the downloaded PDF will split across
+              pages.
+            </p>
+          )}
+          <div
+            style={{ width: PREVIEW_NATIVE_WIDTH, zoom: scale, position: "relative" }}
+          >
             <Template data={resumeData} imageUrl={imageUrl} />
+            {pageBreaksMm.map((mm, i) => (
+              <div
+                key={mm}
+                className="absolute left-0 right-0 pointer-events-none"
+                style={{ top: mm * (PREVIEW_NATIVE_WIDTH / 210) }}
+              >
+                <div className="border-t-2 border-dashed border-violet/60" />
+                <span className="absolute right-2 -top-3 bg-violet text-white text-[11px] font-body font-semibold px-2.5 py-0.5 rounded-full shadow-sm">
+                  Page {i + 2}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

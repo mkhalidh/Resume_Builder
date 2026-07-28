@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const TimelineSection = ({ title, items, renderItem }) => {
   const filtered = items?.filter((item) => item.mainHeading || item.schoolName || item.companyName);
   if (!filtered?.length) return null;
@@ -30,7 +32,7 @@ const TagGroup = ({ label, items }) => {
         {list.map((tag, i) => (
           <span
             key={i}
-            className="font-body text-xs text-jade bg-jade-50 rounded-full px-3 py-1.5"
+            className="inline-block font-body text-xs text-jade bg-jade-50 rounded-full px-3 h-7 leading-7"
           >
             {tag}
           </span>
@@ -45,13 +47,14 @@ const TimelineTemplate = ({ data, imageUrl }) => {
   const hasTags = [skills, tools, languages].some((group) =>
     group?.some(Boolean)
   );
+  const displayImageUrl = useCroppedPhoto(imageUrl);
 
   return (
     <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden px-12 py-12 max-w-2xl mx-auto">
       <div className="flex flex-col items-center text-center mb-12">
         {imageUrl && (
           <img
-            src={imageUrl}
+            src={displayImageUrl}
             className="w-20 h-20 rounded-full object-cover mb-4"
             alt="profile"
           />

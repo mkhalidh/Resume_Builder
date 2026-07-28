@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const SidebarList = ({ title, items }) => {
   const list = items?.filter(Boolean);
   if (!list?.length) return null;
@@ -14,13 +16,14 @@ const SidebarList = ({ title, items }) => {
 };
 
 const CorporateTemplate = ({ data, imageUrl }) => {
+  const displayImageUrl = useCroppedPhoto(imageUrl);
   return (
     <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       <div className="grid sm:grid-cols-[1fr_260px]">
         <div className="flex items-center gap-5 px-10 py-8">
           {imageUrl && (
             <img
-              src={imageUrl}
+              src={displayImageUrl}
               className="w-16 h-16 rounded-lg object-cover"
               alt="profile"
             />

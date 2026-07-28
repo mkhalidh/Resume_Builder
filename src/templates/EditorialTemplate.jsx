@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const SectionLabel = ({ label, number, dark }) => (
   <div
     className={`flex items-center justify-between pb-2 mb-4 border-b ${
@@ -29,7 +31,7 @@ const TagList = ({ items, dark }) => {
       {list.map((item, i) => (
         <span
           key={i}
-          className={`font-body text-xs px-3 py-1.5 rounded-full border ${
+          className={`inline-block font-body text-xs px-3 h-7 leading-7 rounded-full border ${
             dark
               ? "border-white/15 text-white/75"
               : "border-ink/15 text-ink/75"
@@ -47,13 +49,14 @@ const EditorialBase = ({ data, imageUrl, dark }) => {
   const heading = dark ? "text-white" : "text-ink";
   const muted = dark ? "text-white/50" : "text-ink/50";
   const body = dark ? "text-white/75" : "text-ink/75";
+  const displayImageUrl = useCroppedPhoto(imageUrl);
 
   return (
     <div className={`${bg} px-10 py-12 md:px-16 md:py-16`}>
       <div className="flex items-center gap-5 mb-12">
         {imageUrl && (
           <img
-            src={imageUrl}
+            src={displayImageUrl}
             alt="profile"
             className={`w-16 h-16 rounded-full object-cover border-2 ${
               dark ? "border-white/20" : "border-ink/15"

@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const SidebarBlock = ({ title, items }) => {
   const list = items?.filter(Boolean);
   if (!list?.length) return null;
@@ -10,7 +12,7 @@ const SidebarBlock = ({ title, items }) => {
         {list.map((item, i) => (
           <span
             key={i}
-            className="font-body text-[11px] text-white/80 bg-white/8 border border-white/10 rounded-full px-2.5 py-1"
+            className="inline-block font-body text-[11px] text-white/80 bg-white/8 border border-white/10 rounded-full px-2.5 h-6 leading-6"
           >
             {item}
           </span>
@@ -21,13 +23,14 @@ const SidebarBlock = ({ title, items }) => {
 };
 
 const PortfolioTemplate = ({ data, imageUrl }) => {
+  const displayImageUrl = useCroppedPhoto(imageUrl);
   return (
     <div className="flex flex-col md:flex-row bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       {/* Sidebar */}
       <div className="md:w-[240px] bg-[#232339] px-7 py-10 shrink-0">
         {imageUrl && (
           <img
-            src={imageUrl}
+            src={displayImageUrl}
             className="w-16 h-16 rounded-full object-cover border-2 border-white/15 mb-5"
             alt="profile"
           />

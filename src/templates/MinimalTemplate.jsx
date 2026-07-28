@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const TagGroup = ({ label, items }) => {
   const list = items?.filter(Boolean);
   if (!list?.length) return null;
@@ -10,7 +12,7 @@ const TagGroup = ({ label, items }) => {
         {list.map((tag, i) => (
           <span
             key={i}
-            className="font-body text-xs text-ink/70 border border-ink/15 rounded-full px-3 py-1"
+            className="inline-block font-body text-xs text-ink/70 border border-ink/15 rounded-full px-3 h-7 leading-7"
           >
             {tag}
           </span>
@@ -26,12 +28,18 @@ const MinimalTemplate = ({ data, imageUrl }) => {
     group?.some(Boolean)
   );
 
+  // The `grayscale` CSS class only affects on-screen rendering — html2canvas
+  // (used for PDF export) doesn't apply CSS filters, so the exported photo
+  // would show up in color. This hook bakes grayscale into the actual pixels
+  // instead, keeping screen and PDF in sync.
+  const displayImageUrl = useCroppedPhoto(imageUrl, { grayscale: true });
+
   return (
     <div className="bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden px-12 py-12">
       <div className="flex items-center gap-6 mb-10 pb-8 border-b border-ink/10">
         <img
-          src={imageUrl}
-          className="w-20 h-20 rounded-full object-cover grayscale"
+          src={displayImageUrl}
+          className="w-20 h-20 rounded-full object-cover"
           alt="profile"
         />
         <div>

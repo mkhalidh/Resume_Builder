@@ -1,3 +1,5 @@
+import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+
 const ListBlock = ({ title, items }) => {
   if (!items?.some((item) => item)) return null;
   return (
@@ -20,12 +22,13 @@ const ListBlock = ({ title, items }) => {
 };
 
 const ModernTemplate = ({ data, imageUrl }) => {
+  const displayImageUrl = useCroppedPhoto(imageUrl);
   return (
     <div className="flex bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] overflow-hidden">
       {/* Sidebar */}
       <div className="w-[280px] bg-ink px-8 py-10 shrink-0">
         <img
-          src={imageUrl}
+          src={displayImageUrl}
           className="w-24 h-24 rounded-full object-cover border-4 border-jade mb-6"
           alt="profile"
         />
