@@ -1,4 +1,8 @@
 import { useCroppedPhoto } from "../hooks/useCroppedPhoto";
+import { ContactLine } from "../components/ContactLine";
+import { ProjectLinkBadge } from "../components/ProjectLinkBadge";
+
+const DEFAULT_SECTION_ORDER = ["experience", "projects", "education", "certifications"];
 
 const TimelineSection = ({ title, items, renderItem }) => {
   const filtered = items?.filter((item) => item.mainHeading || item.schoolName || item.companyName);
@@ -65,78 +69,129 @@ const TimelineTemplate = ({ data, imageUrl }) => {
         <p className="font-body text-jade text-sm uppercase tracking-widest mt-1">
           {data.designation || "Your Role"}
         </p>
+        <ContactLine
+          contact={data.contact}
+          className="font-body text-xs text-ink/60 mt-2"
+          separatorClassName="mx-2 text-ink/30"
+          linkClassName="hover:text-jade transition-colors"
+        />
       </div>
 
-      <TimelineSection
-        title="Experience"
-        items={data.experiences}
-        renderItem={(exp) => (
-          <>
-            {exp.date && (
-              <p className="font-body text-ink/40 text-xs mb-1">{exp.date}</p>
-            )}
-            {exp.mainHeading && (
-              <h3 className="font-display font-semibold text-ink text-base">
-                {exp.mainHeading}
-              </h3>
-            )}
-            {exp.companyName && (
-              <p className="font-body text-ink/60 text-sm mb-1.5">
-                {exp.companyName}
-              </p>
-            )}
-            {exp.description && (
-              <p className="font-body text-ink/70 text-sm leading-relaxed">
-                {exp.description}
-              </p>
-            )}
-          </>
-        )}
-      />
-
-      <TimelineSection
-        title="Projects"
-        items={data.projects}
-        renderItem={(project) => (
-          <>
-            {project.date && (
-              <p className="font-body text-ink/40 text-xs mb-1">
-                {project.date}
-              </p>
-            )}
-            {project.mainHeading && (
-              <h3 className="font-display font-semibold text-ink text-base">
-                {project.mainHeading}
-              </h3>
-            )}
-            {project.description && (
-              <p className="font-body text-ink/70 text-sm leading-relaxed">
-                {project.description}
-              </p>
-            )}
-          </>
-        )}
-      />
-
-      <TimelineSection
-        title="Education"
-        items={data.education}
-        renderItem={(edu) => (
-          <>
-            {edu.date && (
-              <p className="font-body text-ink/40 text-xs mb-1">{edu.date}</p>
-            )}
-            {edu.schoolName && (
-              <h3 className="font-display font-semibold text-ink text-base">
-                {edu.schoolName}
-              </h3>
-            )}
-            {edu.mainHeading && (
-              <p className="font-body text-ink/60 text-sm">{edu.mainHeading}</p>
-            )}
-          </>
-        )}
-      />
+      {(data.sectionOrder?.length ? data.sectionOrder : DEFAULT_SECTION_ORDER).map(
+        (key) => {
+          if (key === "experience") {
+            return (
+              <TimelineSection
+                key={key}
+                title="Experience"
+                items={data.experiences}
+                renderItem={(exp) => (
+                  <>
+                    {exp.date && (
+                      <p className="font-body text-ink/40 text-xs mb-1">{exp.date}</p>
+                    )}
+                    {exp.mainHeading && (
+                      <h3 className="font-display font-semibold text-ink text-base">
+                        {exp.mainHeading}
+                      </h3>
+                    )}
+                    {exp.companyName && (
+                      <p className="font-body text-ink/60 text-sm mb-1.5">
+                        {exp.companyName}
+                      </p>
+                    )}
+                    {exp.description && (
+                      <p className="font-body text-ink/70 text-sm leading-relaxed">
+                        {exp.description}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+          if (key === "projects") {
+            return (
+              <TimelineSection
+                key={key}
+                title="Projects"
+                items={data.projects}
+                renderItem={(project) => (
+                  <>
+                    {project.date && (
+                      <p className="font-body text-ink/40 text-xs mb-1">
+                        {project.date}
+                      </p>
+                    )}
+                    {project.mainHeading && (
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display font-semibold text-ink text-base">
+                          {project.mainHeading}
+                        </h3>
+                        <ProjectLinkBadge href={project.link} className="text-jade" />
+                      </div>
+                    )}
+                    {project.description && (
+                      <p className="font-body text-ink/70 text-sm leading-relaxed">
+                        {project.description}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+          if (key === "education") {
+            return (
+              <TimelineSection
+                key={key}
+                title="Education"
+                items={data.education}
+                renderItem={(edu) => (
+                  <>
+                    {edu.date && (
+                      <p className="font-body text-ink/40 text-xs mb-1">{edu.date}</p>
+                    )}
+                    {edu.schoolName && (
+                      <h3 className="font-display font-semibold text-ink text-base">
+                        {edu.schoolName}
+                      </h3>
+                    )}
+                    {edu.mainHeading && (
+                      <p className="font-body text-ink/60 text-sm">{edu.mainHeading}</p>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+          if (key === "certifications") {
+            return (
+              <TimelineSection
+                key={key}
+                title="Certifications & Achievements"
+                items={data.certifications}
+                renderItem={(cert) => (
+                  <>
+                    {cert.date && (
+                      <p className="font-body text-ink/40 text-xs mb-1">{cert.date}</p>
+                    )}
+                    {cert.mainHeading && (
+                      <h3 className="font-display font-semibold text-ink text-base">
+                        {cert.mainHeading}
+                      </h3>
+                    )}
+                    {cert.issuer && (
+                      <p className="font-body text-ink/60 text-sm">{cert.issuer}</p>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+          return null;
+        }
+      )}
 
       {hasTags && (
         <section>
