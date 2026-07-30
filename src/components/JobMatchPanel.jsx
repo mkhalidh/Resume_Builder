@@ -1,6 +1,61 @@
 import { useState } from "react";
-import { Check, Plus, Search, Sparkles, Loader2 } from "lucide-react";
+import {
+  Check,
+  Plus,
+  Search,
+  Sparkles,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
 import { matchJobToResume } from "../lib/jobMatch";
+
+// Builds a plain-text summary of the person's actual demonstrated work (not
+// just a keyword list) so the AI can judge real relevance to a job
+// description instead of being fooled by a keyword that only lives in the
+// skills list. Deliberately excludes name/designation/contact — no reason to
+// send that to a third-party model for this.
+const buildResumeContentSummary = (resumeData) => {
+  if (!resumeData) return "";
+  const lines = [];
+
+  const experiences = (resumeData.experiences || []).filter(
+    (e) => e.mainHeading || e.description
+  );
+  if (experiences.length) {
+    lines.push("Experience:");
+    experiences.forEach((e) => {
+      lines.push(
+        `- ${e.mainHeading || "Untitled role"}${
+          e.companyName ? ` at ${e.companyName}` : ""
+        }: ${e.description || "no description"}`
+      );
+    });
+  }
+
+  const projects = (resumeData.projects || []).filter(
+    (p) => p.mainHeading || p.description
+  );
+  if (projects.length) {
+    lines.push("Projects:");
+    projects.forEach((p) => {
+      lines.push(
+        `- ${p.mainHeading || "Untitled project"}: ${
+          p.description || "no description"
+        }`
+      );
+    });
+  }
+
+  const { skills, tools, languages } = resumeData.rightSidebar || {};
+  const skillList = [...(skills || []), ...(tools || []), ...(languages || [])].filter(
+    Boolean
+  );
+  if (skillList.length) {
+    lines.push(`Skills/tools/languages listed: ${skillList.join(", ")}`);
+  }
+
+  return lines.join("\n");
+};
 
 const RING_RADIUS = 32;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -45,14 +100,14 @@ const JobMatchPanel = ({ resumeData }) => {
   const [jobText, setJobText] = useState("");
   const [result, setResult] = useState(null);
   const [aiStatus, setAiStatus] = useState("idle"); // idle | loading | done | error
-  const [aiGuidance, setAiGuidance] = useState("");
+  const [aiGuidance, setAiGuidance] = useState(null);
   const [aiError, setAiError] = useState("");
 
   const handleCheck = () => {
     if (!jobText.trim()) return;
     setResult(matchJobToResume(jobText, resumeData));
     setAiStatus("idle");
-    setAiGuidance("");
+    setAiGuidance(null);
     setAiError("");
   };
 
@@ -73,6 +128,7 @@ const JobMatchPanel = ({ resumeData }) => {
           jobDescription: jobText,
           matched: result.matched,
           missing: result.missing,
+          resumeContent: buildResumeContentSummary(resumeData),
         }),
       });
     } catch {
@@ -238,15 +294,87 @@ const JobMatchPanel = ({ resumeData }) => {
                 </div>
               )}
 
-              {aiStatus === "done" && (
+              {aiStatus === "done" && aiGuidance && (
                 <div className="bg-violet/5 border border-violet/10 rounded-xl p-4">
-                  <p className="inline-flex items-center gap-1.5 font-body text-xs font-semibold text-violet uppercase tracking-wide mb-2">
+                  <p className="inline-flex items-center gap-1.5 font-body text-xs font-semibold text-violet uppercase tracking-wide mb-3">
                     <Sparkles className="w-3.5 h-3.5" />
                     AI suggestions
                   </p>
-                  <p className="font-body text-sm text-ink/80 whitespace-pre-line leading-relaxed">
-                    {aiGuidance}
-                  </p>
+
+                  {aiGuidance.fitSummary && (
+                    <p className="font-body text-sm text-ink/80 leading-relaxed mb-4">
+                      {aiGuidance.fitSummary}
+                    </p>
+                  )}
+
+                  {Array.isArray(aiGuidance.strengths) &&
+                    aiGuidance.strengths.length > 0 && (
+                      <div className="mb-4">
+                        <p className="font-body text-xs font-semibold text-jade uppercase tracking-wide mb-2">
+                          What&apos;s working
+                        </p>
+                        <ul className="space-y-1.5">
+                          {aiGuidance.strengths.map((item, i) => (
+                            <li
+                              key={i}
+                              className="flex items-start gap-2 font-body text-sm text-ink/80 leading-relaxed"
+                            >
+                              <Check
+                                className="w-3.5 h-3.5 text-jade shrink-0 mt-1"
+                                strokeWidth={2.5}
+                              />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                  {Array.isArray(aiGuidance.gaps) &&
+                    aiGuidance.gaps.length > 0 && (
+                      <div className="mb-4">
+                        <p className="font-body text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2">
+                          Gaps to address
+                        </p>
+                        <ul className="space-y-1.5">
+                          {aiGuidance.gaps.map((item, i) => (
+                            <li
+                              key={i}
+                              className="flex items-start gap-2 font-body text-sm text-ink/80 leading-relaxed"
+                            >
+                              <AlertTriangle
+                                className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-1"
+                                strokeWidth={2}
+                              />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                  {Array.isArray(aiGuidance.suggestions) &&
+                    aiGuidance.suggestions.length > 0 && (
+                      <div>
+                        <p className="font-body text-xs font-semibold text-violet uppercase tracking-wide mb-2">
+                          Try adding
+                        </p>
+                        <ul className="space-y-1.5">
+                          {aiGuidance.suggestions.map((item, i) => (
+                            <li
+                              key={i}
+                              className="flex items-start gap-2 font-body text-sm text-ink/80 leading-relaxed"
+                            >
+                              <Plus
+                                className="w-3.5 h-3.5 text-violet shrink-0 mt-1"
+                                strokeWidth={2.5}
+                              />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                 </div>
               )}
             </>

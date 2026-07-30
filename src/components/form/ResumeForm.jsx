@@ -1,7 +1,87 @@
+import { useRef } from "react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
+import { GripVertical, ChevronUp, ChevronDown } from "lucide-react";
 import { sampleResumeData } from "../../data/sampleResumeData";
 import { stressTestResumeData } from "../../data/stressTestResumeData";
+
+// The dev-only sample/stress-test data files predate the certifications and
+// section-order fields and are intentionally left untouched — this fills in
+// defaults for those two fields only when the fixture data doesn't have them,
+// so `setValues(...)` below never leaves certifications/sectionOrder
+// undefined (which would crash the Certifications FieldArray and the section
+// order control, both of which call `.map` unconditionally).
+const NEW_SECTION_DEFAULTS = {
+  certifications: [{ mainHeading: "", issuer: "", date: "" }],
+  sectionOrder: ["experience", "projects", "education", "certifications"],
+};
+
+const SECTION_LABELS = {
+  experience: "Experience",
+  projects: "Projects",
+  education: "Education",
+  certifications: "Certifications & Achievements",
+};
+
+// Native HTML5 drag-and-drop — no dependency needed for reordering 4 rows.
+// Up/down arrows are a second, always-available way to reorder since HTML5
+// drag-and-drop doesn't work on touch devices.
+const SectionOrderControl = ({ order, onChange }) => {
+  const dragIndex = useRef(null);
+
+  const moveItem = (from, to) => {
+    if (to < 0 || to >= order.length || from === to) return;
+    const next = [...order];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    onChange(next);
+  };
+
+  return (
+    <div className="space-y-2">
+      {order.map((key, index) => (
+        <div
+          key={key}
+          draggable
+          onDragStart={(e) => {
+            dragIndex.current = index;
+            e.dataTransfer.effectAllowed = "move";
+          }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => {
+            if (dragIndex.current === null) return;
+            moveItem(dragIndex.current, index);
+            dragIndex.current = null;
+          }}
+          className="flex items-center gap-3 bg-surface border border-black/10 rounded-xl px-4 py-2.5"
+        >
+          <GripVertical className="w-4 h-4 text-ink/30 cursor-grab shrink-0" />
+          <span className="flex-1 font-body text-sm text-ink">
+            {SECTION_LABELS[key] || key}
+          </span>
+          <button
+            type="button"
+            onClick={() => moveItem(index, index - 1)}
+            disabled={index === 0}
+            className="text-ink/40 hover:text-jade disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label={`Move ${SECTION_LABELS[key] || key} up`}
+          >
+            <ChevronUp className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => moveItem(index, index + 1)}
+            disabled={index === order.length - 1}
+            className="text-ink/40 hover:text-jade disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label={`Move ${SECTION_LABELS[key] || key} down`}
+          >
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const inputClass =
   "w-full px-4 py-3 border border-black/10 rounded-xl font-body text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-jade-50 focus:border-jade transition-colors";
@@ -20,6 +100,17 @@ const ResumeForm = ({ onSubmit }) => {
     name: Yup.string().required("Full Name is required"),
     designation: Yup.string().required("Designation is required"),
     image: Yup.mixed().required("Image is required"),
+    // No format validation (.email()/.url()) here on purpose — these fields
+    // are optional, so a malformed entry should never block the whole form
+    // from submitting (previously it silently did, which read as "nothing
+    // works" since the resulting error text is easy to miss among the rest
+    // of the form).
+    contact: Yup.object({
+      email: Yup.string().optional(),
+      phone: Yup.string().optional(),
+      linkedin: Yup.string().optional(),
+      github: Yup.string().optional(),
+    }),
     experiences: Yup.array().of(
       Yup.object({
         mainHeading: Yup.string().required("Job Title is required"),
@@ -33,6 +124,7 @@ const ResumeForm = ({ onSubmit }) => {
         mainHeading: Yup.string().required("Project Name is required"),
         date: Yup.string(),
         description: Yup.string().required("Description is required"),
+        link: Yup.string().optional(),
       })
     ),
     education: Yup.array().of(
@@ -40,6 +132,13 @@ const ResumeForm = ({ onSubmit }) => {
         mainHeading: Yup.string().required("Degree is required"),
         schoolName: Yup.string().required("School Name is required"),
         date: Yup.string().required("Date is required"),
+      })
+    ),
+    certifications: Yup.array().of(
+      Yup.object({
+        mainHeading: Yup.string().optional(),
+        issuer: Yup.string().optional(),
+        date: Yup.string().optional(),
       })
     ),
     rightSidebar: Yup.object({
@@ -55,11 +154,14 @@ const ResumeForm = ({ onSubmit }) => {
         name: "",
         designation: "",
         image: null,
+        contact: { email: "", phone: "", linkedin: "", github: "" },
         experiences: [
           { mainHeading: "", companyName: "", date: "", description: "" },
         ],
-        projects: [{ mainHeading: "", date: "", description: "" }],
+        projects: [{ mainHeading: "", date: "", description: "", link: "" }],
         education: [{ mainHeading: "", schoolName: "", date: "" }],
+        certifications: [{ mainHeading: "", issuer: "", date: "" }],
+        sectionOrder: ["experience", "projects", "education", "certifications"],
         rightSidebar: {
           skills: [""],
           tools: [""],
@@ -80,7 +182,11 @@ const ResumeForm = ({ onSubmit }) => {
                   const file = new File([await res.blob()], "photo.png", {
                     type: "image/png",
                   });
-                  setValues({ ...sampleResumeData, image: file });
+                  setValues({
+                    ...NEW_SECTION_DEFAULTS,
+                    ...sampleResumeData,
+                    image: file,
+                  });
                 }}
                 className="flex-1 font-body text-xs font-medium text-violet border border-dashed border-violet/40 rounded-xl px-4 py-2.5 hover:bg-violet/5 transition-colors"
               >
@@ -93,7 +199,11 @@ const ResumeForm = ({ onSubmit }) => {
                   const file = new File([await res.blob()], "photo.png", {
                     type: "image/png",
                   });
-                  setValues({ ...stressTestResumeData, image: file });
+                  setValues({
+                    ...NEW_SECTION_DEFAULTS,
+                    ...stressTestResumeData,
+                    image: file,
+                  });
                 }}
                 className="flex-1 font-body text-xs font-medium text-gold border border-dashed border-gold/50 rounded-xl px-4 py-2.5 hover:bg-gold/10 transition-colors"
               >
@@ -144,6 +254,63 @@ const ResumeForm = ({ onSubmit }) => {
             {errors.image && touched.image && (
               <div className={errorClass}>{errors.image}</div>
             )}
+          </div>
+
+          {/* Contact Section (all optional) */}
+          <div>
+            <h2 className={sectionTitleClass}>Contact (optional)</h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Field
+                  name="contact.email"
+                  placeholder="Email"
+                  className={inputClass}
+                />
+                {errors.contact?.email && touched.contact?.email && (
+                  <div className={errorClass}>{errors.contact.email}</div>
+                )}
+              </div>
+              <div>
+                <Field
+                  name="contact.phone"
+                  placeholder="Phone"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <Field
+                  name="contact.linkedin"
+                  placeholder="LinkedIn URL"
+                  className={inputClass}
+                />
+                {errors.contact?.linkedin && touched.contact?.linkedin && (
+                  <div className={errorClass}>{errors.contact.linkedin}</div>
+                )}
+              </div>
+              <div>
+                <Field
+                  name="contact.github"
+                  placeholder="GitHub URL"
+                  className={inputClass}
+                />
+                {errors.contact?.github && touched.contact?.github && (
+                  <div className={errorClass}>{errors.contact.github}</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Section order — drag or use arrows, doesn't affect section design */}
+          <div>
+            <h2 className={sectionTitleClass}>Section Order</h2>
+            <p className="font-body text-sm text-ink/50 mb-4">
+              Drag to rearrange, or use the arrows. This only changes the order
+              sections appear in — not how they look.
+            </p>
+            <SectionOrderControl
+              order={values.sectionOrder}
+              onChange={(next) => setFieldValue("sectionOrder", next)}
+            />
           </div>
 
           {/* Experience Section */}
@@ -258,13 +425,29 @@ const ResumeForm = ({ onSubmit }) => {
                         placeholder="Description"
                         className={inputClass}
                       />
+                      <Field
+                        name={`projects[${index}].link`}
+                        placeholder="Project Link (optional)"
+                        className={inputClass}
+                      />
+                      {errors.projects?.[index]?.link &&
+                        touched.projects?.[index]?.link && (
+                          <div className={errorClass}>
+                            {errors.projects[index].link}
+                          </div>
+                        )}
                     </div>
                   ))}
                   {values.projects.length < 5 && (
                     <button
                       type="button"
                       onClick={() =>
-                        push({ mainHeading: "", date: "", description: "" })
+                        push({
+                          mainHeading: "",
+                          date: "",
+                          description: "",
+                          link: "",
+                        })
                       }
                       className={addButtonClass}
                     >
@@ -321,6 +504,60 @@ const ResumeForm = ({ onSubmit }) => {
                       className={addButtonClass}
                     >
                       Add Education
+                    </button>
+                  )}
+                </div>
+              )}
+            </FieldArray>
+          </div>
+
+          {/* Certifications & Achievements Section (optional) */}
+          <div>
+            <h2 className={sectionTitleClass}>
+              Certifications &amp; Achievements (optional)
+            </h2>
+            <FieldArray name="certifications">
+              {({ push, remove }) => (
+                <div>
+                  {values.certifications.map((_, index) => (
+                    <div key={index} className={entryClass}>
+                      {values.certifications.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className={removeButtonClass}
+                        >
+                          Remove
+                        </button>
+                      )}
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <Field
+                          name={`certifications[${index}].mainHeading`}
+                          placeholder="Certification / Achievement Title"
+                          className={inputClass}
+                        />
+                        <Field
+                          name={`certifications[${index}].issuer`}
+                          placeholder="Issuing Organization (optional)"
+                          className={inputClass}
+                        />
+                      </div>
+                      <Field
+                        name={`certifications[${index}].date`}
+                        placeholder="Date (optional)"
+                        className={inputClass}
+                      />
+                    </div>
+                  ))}
+                  {values.certifications.length < 5 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        push({ mainHeading: "", issuer: "", date: "" })
+                      }
+                      className={addButtonClass}
+                    >
+                      Add Certification
                     </button>
                   )}
                 </div>

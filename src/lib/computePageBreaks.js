@@ -41,3 +41,23 @@ export function measureResumeMm(containerEl) {
     .sort((a, b) => a - b);
   return { headingTopsMm, totalHeightMm: rect.height * pxToMm };
 }
+
+// Measures every link's position/size in the same mm space as the rest of
+// this file, so a jsPDF link annotation can be placed exactly where the
+// visible link ended up in the exported image (see handleDownload in
+// Builder.jsx) — the flattened html2canvas image has no real hyperlinks of
+// its own, so clickability has to be reconstructed as an overlay.
+export function measureLinkRectsMm(containerEl) {
+  const rect = containerEl.getBoundingClientRect();
+  const pxToMm = 210 / rect.width;
+  return [...containerEl.querySelectorAll("a[href]")].map((el) => {
+    const r = el.getBoundingClientRect();
+    return {
+      href: el.getAttribute("href"),
+      xMm: (r.left - rect.left) * pxToMm,
+      yMm: (r.top - rect.top) * pxToMm,
+      widthMm: r.width * pxToMm,
+      heightMm: r.height * pxToMm,
+    };
+  });
+}

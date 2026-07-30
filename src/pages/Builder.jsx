@@ -7,7 +7,11 @@ import ResumeForm from "../components/form/ResumeForm";
 import JobMatchPanel from "../components/JobMatchPanel";
 import { getTemplate } from "../templates";
 import { useSEO } from "../hooks/useSEO";
-import { computePageBreaks, measureResumeMm } from "../lib/computePageBreaks";
+import {
+  computePageBreaks,
+  measureResumeMm,
+  measureLinkRectsMm,
+} from "../lib/computePageBreaks";
 
 // Templates are built assuming a fixed desktop-width page (fixed sidebar/column
 // widths in px), so on a narrow phone screen they'd otherwise just squish into
@@ -33,11 +37,14 @@ const Builder = () => {
     name: "",
     designation: "",
     image: null,
+    contact: { email: "", phone: "", linkedin: "", github: "" },
     experiences: [
       { mainHeading: "", companyName: "", date: "", description: "" },
     ],
-    projects: [{ mainHeading: "", date: "", description: "" }],
+    projects: [{ mainHeading: "", date: "", description: "", link: "" }],
     education: [{ mainHeading: "", schoolName: "", date: "" }],
+    certifications: [{ mainHeading: "", issuer: "", date: "" }],
+    sectionOrder: ["experience", "projects", "education", "certifications"],
     rightSidebar: { skills: [""], tools: [""], languages: [""] },
   });
 
@@ -131,9 +138,16 @@ const Builder = () => {
     // The same function drives the live preview's page-break indicator, so
     // the two always agree on where a break will fall.
     const { headingTopsMm } = measureResumeMm(input);
+    // The flattened export image has no real hyperlinks — these positions
+    // are used below to overlay actual clickable jsPDF link annotations at
+    // the same spots the visible contact/project links landed on-screen.
+    const linkRects = measureLinkRectsMm(input);
 
     html2canvas(input, {
-      scale: window.devicePixelRatio, // Improves resolution
+      // Many displays report devicePixelRatio 1, which produces a soft/blurry
+      // PDF once a viewer zooms in — flooring this at 2 keeps the exported
+      // image crisp regardless of the exporting device's actual DPR.
+      scale: Math.max(window.devicePixelRatio, 2),
       useCORS: true,
       logging: false,
       scrollX: 0, // Prevents unwanted horizontal scroll issues
@@ -192,6 +206,19 @@ const Builder = () => {
           pdf.setFillColor(255, 255, 255);
           pdf.rect(0, 0, pageWidth, topMargin, "F");
         }
+
+        const pageBottom = breaks[i + 1];
+        linkRects
+          .filter((link) => link.yMm >= pageTop && link.yMm < pageBottom)
+          .forEach((link) => {
+            pdf.link(
+              link.xMm,
+              link.yMm - pageTop + topMargin,
+              link.widthMm,
+              link.heightMm,
+              { url: link.href }
+            );
+          });
       }
 
       pdf.save("resume.pdf");
