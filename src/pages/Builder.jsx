@@ -159,6 +159,15 @@ const Builder = () => {
       // image crisp regardless of the exporting device's actual DPR.
       scale: Math.max(window.devicePixelRatio, 2),
       useCORS: true,
+      // html2canvas's default renderer re-measures and re-draws text itself,
+      // and its cloned capture document doesn't reliably pick up the
+      // Poppins/Inter @font-face rules loaded from Google Fonts — it silently
+      // falls back to a system font for the whole capture (wrong letterforms,
+      // and punctuation landing in the wrong spot since the fallback font's
+      // metrics don't match). foreignObjectRendering paints through the
+      // browser's own SVG renderer instead, using the fonts exactly as they
+      // already appear on screen.
+      foreignObjectRendering: true,
       logging: false,
       scrollX: 0, // Prevents unwanted horizontal scroll issues
       scrollY: 0,
