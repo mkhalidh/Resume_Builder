@@ -113,7 +113,7 @@ const ATSTemplate = ({ data }) => {
   const groups = [
     { label: "Skills", items: skills },
     { label: "Tools", items: tools },
-    { label: "Languages", items: languages },
+    { label: "Languages/Frameworks", items: languages },
   ].filter((group) => group.items?.some(Boolean));
 
   return (

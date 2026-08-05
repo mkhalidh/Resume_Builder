@@ -183,7 +183,7 @@ const CorporateTemplate = ({ data, imageUrl }) => {
         <div className="bg-jade-50 px-8 py-8">
           <SidebarList title="Skills" items={data.rightSidebar?.skills} />
           <SidebarList title="Tools" items={data.rightSidebar?.tools} />
-          <SidebarList title="Languages" items={data.rightSidebar?.languages} />
+          <SidebarList title="Languages/Frameworks" items={data.rightSidebar?.languages} />
         </div>
       </div>
 

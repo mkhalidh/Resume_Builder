@@ -209,7 +209,7 @@ const PortfolioTemplate = ({ data, imageUrl }) => {
 
         <SidebarBlock title="Skills" items={data.rightSidebar?.skills} />
         <SidebarBlock title="Tools" items={data.rightSidebar?.tools} />
-        <SidebarBlock title="Languages" items={data.rightSidebar?.languages} />
+        <SidebarBlock title="Languages/Frameworks" items={data.rightSidebar?.languages} />
       </div>
 
       {/* Main */}

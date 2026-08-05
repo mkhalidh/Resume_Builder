@@ -182,7 +182,7 @@ const ModernTemplate = ({ data, imageUrl }) => {
         </div>
         <ListBlock title="Skills" items={data.rightSidebar.skills} />
         <ListBlock title="Tools" items={data.rightSidebar.tools} />
-        <ListBlock title="Languages" items={data.rightSidebar.languages} />
+        <ListBlock title="Languages/Frameworks" items={data.rightSidebar.languages} />
       </div>
 
       {/* Main */}

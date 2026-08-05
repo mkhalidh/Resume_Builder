@@ -266,7 +266,7 @@ const EditorialBase = ({ data, imageUrl, dark }) => {
           </div>
           <div>
             <SectionLabel
-              label="Languages"
+              label="Languages/Frameworks"
               number={String(visibleOrder.length + 3).padStart(2, "0")}
               dark={dark}
             />
