@@ -569,8 +569,13 @@ const ResumeForm = ({ onSubmit }) => {
           {[
             { key: "skills", label: "Skills", placeholder: "Skill" },
             { key: "tools", label: "Tools", placeholder: "Tool" },
-            { key: "languages", label: "Languages", placeholder: "Language" },
-          ].map(({ key, label, placeholder }) => (
+            {
+              key: "languages",
+              label: "Languages/Frameworks",
+              placeholder: "Language/Framework",
+              singular: "Language/Framework",
+            },
+          ].map(({ key, label, placeholder, singular }) => (
             <div key={key}>
               <h2 className={sectionTitleClass}>{label}</h2>
               <FieldArray name={`rightSidebar.${key}`}>
@@ -602,7 +607,7 @@ const ResumeForm = ({ onSubmit }) => {
                         onClick={() => push("")}
                         className={addButtonClass}
                       >
-                        Add {label.slice(0, -1)}
+                        Add {singular || label.slice(0, -1)}
                       </button>
                     )}
                   </div>

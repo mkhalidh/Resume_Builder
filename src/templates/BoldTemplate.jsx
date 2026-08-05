@@ -200,7 +200,7 @@ const BoldTemplate = ({ data, imageUrl }) => {
             {[
               { label: "Skills", items: skills, color: "bg-coral" },
               { label: "Tools", items: tools, color: "bg-gold" },
-              { label: "Languages", items: languages, color: "bg-violet" },
+              { label: "Languages/Frameworks", items: languages, color: "bg-violet" },
             ].map(
               ({ label, items, color }) =>
                 items?.some(Boolean) && (

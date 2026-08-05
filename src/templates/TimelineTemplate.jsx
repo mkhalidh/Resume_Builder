@@ -196,11 +196,11 @@ const TimelineTemplate = ({ data, imageUrl }) => {
       {hasTags && (
         <section>
           <h2 className="font-display font-bold text-ink text-sm uppercase tracking-widest mb-5 text-center">
-            Skills &amp; Languages
+            Skills &amp; Languages/Frameworks
           </h2>
           <TagGroup label="Skills" items={skills} />
           <TagGroup label="Tools" items={tools} />
-          <TagGroup label="Languages" items={languages} />
+          <TagGroup label="Languages/Frameworks" items={languages} />
         </section>
       )}
     </div>

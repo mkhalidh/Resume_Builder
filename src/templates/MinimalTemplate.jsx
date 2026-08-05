@@ -221,7 +221,7 @@ const MinimalTemplate = ({ data, imageUrl }) => {
           </h2>
           <TagGroup label="Skills" items={skills} />
           <TagGroup label="Tools" items={tools} />
-          <TagGroup label="Languages" items={languages} />
+          <TagGroup label="Languages/Frameworks" items={languages} />
         </section>
       )}
     </div>
