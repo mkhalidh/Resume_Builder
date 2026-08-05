@@ -130,6 +130,16 @@ const Builder = () => {
       new Promise((resolve) => setTimeout(resolve, 3000)),
     ]);
 
+    // fonts.ready resolving doesn't guarantee the browser has already
+    // repainted with the new metrics on the very next tick — html2canvas
+    // can still measure text mid-reflow, which shows up as squished words
+    // (missing spaces) or dropped punctuation right at a line-wrap point.
+    // Waiting two animation frames ensures a full layout+paint pass has
+    // actually happened first.
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    );
+
     // Measured on the live DOM, before capture — section headings (every
     // template uses h2/h3 for these) mark points a page break should avoid
     // landing just after. Without this, a heading like "Education" can end
