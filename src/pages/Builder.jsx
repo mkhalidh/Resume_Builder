@@ -222,6 +222,15 @@ const Builder = () => {
       }
 
       pdf.save("resume.pdf");
+
+      // The actual conversion for this app — GA4 doesn't count anything as a
+      // "key event" unless a real event fires for it (page_view alone won't
+      // do), so this is what gets marked as the key event in GA4 admin.
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "resume_download", {
+          template_name: template.name,
+        });
+      }
     });
   };
 
