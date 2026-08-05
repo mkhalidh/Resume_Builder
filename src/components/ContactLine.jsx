@@ -3,6 +3,12 @@
 const stripProtocol = (url) =>
   url.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/+$/, "");
 
+// The contact fields aren't validated as URLs (an invalid entry shouldn't
+// block the whole form), so a bare domain like "linkedin.com/in/x" would
+// otherwise become a relative href on-screen and an invalid URI in the
+// exported PDF's link annotation — either way, effectively unclickable.
+const normalizeUrl = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`);
+
 // Shared across every template: a single-line, icon-free contact row
 // ("email | phone | linkedin | github") so it reads correctly on a printed/
 // PDF resume, not just on screen. `className` controls text color so each
@@ -21,13 +27,13 @@ export const ContactLine = ({
     phone && { key: "phone", href: `tel:${phone}`, text: phone },
     linkedin && {
       key: "linkedin",
-      href: linkedin,
+      href: normalizeUrl(linkedin),
       text: stripProtocol(linkedin),
       external: true,
     },
     github && {
       key: "github",
-      href: github,
+      href: normalizeUrl(github),
       text: stripProtocol(github),
       external: true,
     },
