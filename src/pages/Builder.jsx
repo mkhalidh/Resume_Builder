@@ -159,12 +159,24 @@ const Builder = () => {
       // image crisp regardless of the exporting device's actual DPR.
       scale: Math.max(window.devicePixelRatio, 2),
       useCORS: true,
+      // html2canvas's default word-at-a-time text layout can drift out of
+      // sync with the browser's own line-wrapping over a long paragraph,
+      // occasionally swallowing a space or a trailing punctuation mark.
+      // Rendering letter-by-letter keeps its measurements aligned with what
+      // was actually laid out on screen.
+      letterRendering: true,
       logging: false,
       scrollX: 0, // Prevents unwanted horizontal scroll issues
       scrollY: 0,
       backgroundColor: "#ffffff", // html2canvas's own background auto-detection is unreliable
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
+      // TEMP DEBUG — remove before commit
+      const dbg = document.createElement("img");
+      dbg.src = imgData;
+      dbg.style.cssText = "position:fixed;top:0;left:0;z-index:99999;width:100vw;background:#fff;";
+      document.body.appendChild(dbg);
+      // END TEMP DEBUG
       const pageWidth = 210; // A4 width in mm
       const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
