@@ -171,12 +171,6 @@ const Builder = () => {
       backgroundColor: "#ffffff", // html2canvas's own background auto-detection is unreliable
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      // TEMP DEBUG — remove before commit
-      const dbg = document.createElement("img");
-      dbg.src = imgData;
-      dbg.style.cssText = "position:fixed;top:0;left:0;z-index:99999;width:100vw;background:#fff;";
-      document.body.appendChild(dbg);
-      // END TEMP DEBUG
       const pageWidth = 210; // A4 width in mm
       const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
