@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { GripVertical, ChevronUp, ChevronDown } from "lucide-react";
 import { sampleResumeData } from "../../data/sampleResumeData";
 import { stressTestResumeData } from "../../data/stressTestResumeData";
+import { myResumeData } from "../../data/myResumeData";
 
 // The dev-only sample/stress-test data files predate the certifications and
 // section-order fields and are intentionally left untouched — this fills in
@@ -173,6 +174,24 @@ const ResumeForm = ({ onSubmit }) => {
     >
       {({ values, setFieldValue, setValues, errors, touched }) => (
         <Form className="bg-white rounded-2xl border border-black/5 shadow-sm p-8 md:p-10 space-y-10">
+          <button
+            type="button"
+            onClick={async () => {
+              const res = await fetch("/photo.png");
+              const file = new File([await res.blob()], "photo.png", {
+                type: "image/png",
+              });
+              setValues({
+                ...NEW_SECTION_DEFAULTS,
+                ...myResumeData,
+                image: file,
+              });
+            }}
+            className="w-full font-body text-xs font-medium text-jade-600 border border-dashed border-jade/40 rounded-xl px-4 py-2.5 hover:bg-jade-50 transition-colors"
+          >
+            📄 Fill My Resume (for testing production deploys)
+          </button>
+
           {import.meta.env.DEV && (
             <div className="flex flex-col sm:flex-row gap-2">
               <button

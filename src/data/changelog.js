@@ -12,6 +12,16 @@ export const changelog = [
     major: "1",
     releases: [
       {
+        version: "1.2.0",
+        date: "2026-08-05",
+        highlights: [
+          "Added optional contact info, a clickable project link, and a Certifications & Achievements section to all 9 templates, plus drag-and-drop section reordering.",
+          "Project and contact links are now real, clickable hyperlinks in the exported PDF, not just on-screen.",
+          "Fixed occasional squished text and dropped punctuation in exported PDFs caused by capturing before web fonts finished settling.",
+          "Added a social preview image so links shared on Reddit, X, and LinkedIn show a proper card instead of plain text.",
+        ],
+      },
+      {
         version: "1.1.0",
         date: "2026-07-28",
         highlights: [
