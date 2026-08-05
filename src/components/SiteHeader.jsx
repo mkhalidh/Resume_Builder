@@ -49,7 +49,7 @@ const SiteHeader = () => {
             onClick={() => setShowWhatsNew(true)}
             className="font-body text-sm font-medium text-ink/50 hover:text-ink transition-colors"
           >
-            v{__APP_VERSION__}
+            v{__APP_VERSION__} · Beta
           </button>
           <a
             href={GITHUB_URL}
@@ -132,7 +132,7 @@ const SiteHeader = () => {
             }}
             className="font-body text-sm font-medium text-ink/50 text-left"
           >
-            v{__APP_VERSION__} · What&apos;s New
+            v{__APP_VERSION__} · Beta · What&apos;s New
           </button>
         </div>
       )}

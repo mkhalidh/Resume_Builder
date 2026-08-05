@@ -1356,7 +1356,7 @@ const Home = () => {
             </a>
             <span className="text-white/20">·</span>
             <p className="font-body text-white/40 text-sm">
-              v{__APP_VERSION__}
+              v{__APP_VERSION__} · Beta
             </p>
             <button
               type="button"
