@@ -36,7 +36,7 @@ export const posts = [
       },
       {
         heading: "One last check",
-        body: "Read your summary out loud. If it sounds like something you'd say about a stranger rather than something true about your own work, rewrite it until it doesn't.",
+        body: "Read your summary out loud. If it sounds like something you'd say about a stranger rather than something true about your own work, rewrite it until it doesn't. For more examples across different industries, [Indeed's guide to writing a resume summary](https://www.indeed.com/career-advice/resumes-cover-letters/how-to-write-a-resume-summary) is a solid reference.",
       },
     ],
   },
@@ -72,7 +72,7 @@ export const posts = [
       },
       {
         heading: "Format is a container, not a fix",
-        body: "No format rescues weak content. Pick the one that presents your actual experience honestly and clearly, then spend your remaining effort on the bullet points themselves — that's where a resume is actually won or lost.",
+        body: "No format rescues weak content. Pick the one that presents your actual experience honestly and clearly, then spend your remaining effort on the bullet points themselves — that's where a resume is actually won or lost. If you want a deeper breakdown of each format with real examples, [Indeed's resume format guide](https://www.indeed.com/career-advice/resumes-cover-letters/resume-format-guide) covers it well.",
       },
     ],
   },
@@ -108,7 +108,7 @@ export const posts = [
       },
       {
         heading: "Pair the verb with a result",
-        body: "The verb swap only does half the work. “Streamlined the onboarding process” is better than “Responsible for onboarding,” but “Streamlined onboarding, cutting new-hire ramp-up time from three weeks to one” is what actually gets remembered. If you don't have a number, a concrete before/after works almost as well.",
+        body: "The verb swap only does half the work. “Streamlined the onboarding process” is better than “Responsible for onboarding,” but “Streamlined onboarding, cutting new-hire ramp-up time from three weeks to one” is what actually gets remembered. If you don't have a number, a concrete before/after works almost as well. For a longer reference list, [Harvard's Office of Career Services list of resume action verbs](https://ocs.fas.harvard.edu/list-action-verbs) is one of the most commonly cited ones out there.",
       },
     ],
   },
