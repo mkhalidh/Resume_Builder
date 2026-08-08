@@ -12,6 +12,13 @@ export const changelog = [
     major: "1",
     releases: [
       {
+        version: "1.2.1",
+        date: "2026-08-08",
+        highlights: [
+          'Fixed the "Match to a Job" AI suggestions failing with an error — switched the underlying AI provider after the previous one started having outages.',
+        ],
+      },
+      {
         version: "1.2.0",
         date: "2026-08-05",
         highlights: [
