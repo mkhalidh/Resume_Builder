@@ -9,6 +9,38 @@ const AUTHOR_NAME = "Muhammad Khalid Hussain";
 const LINKEDIN_URL = "https://www.linkedin.com/in/muhammad-khalid-hussain-384752202/";
 const GITHUB_PROFILE_URL = "https://github.com/mkhalidh/";
 
+// Post body text can embed a markdown-style [label](url) link to cite an
+// external source — this splits on that pattern and renders a real <a> in
+// its place instead of printing the brackets literally.
+const LINK_PATTERN = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+
+const renderWithLinks = (text) => {
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = LINK_PATTERN.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(
+      <a
+        key={match.index}
+        href={match[2]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-jade-600 underline underline-offset-2 hover:text-jade-600/80"
+      >
+        {match[1]}
+      </a>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+};
+
 const BlogPost = () => {
   const { slug } = useParams();
   const post = getPost(slug);
@@ -92,7 +124,7 @@ const BlogPost = () => {
               </h2>
               {section.body && (
                 <p className="font-body text-ink/70 leading-relaxed whitespace-pre-line">
-                  {section.body}
+                  {renderWithLinks(section.body)}
                 </p>
               )}
               {section.list && (

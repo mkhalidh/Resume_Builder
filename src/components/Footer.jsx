@@ -20,16 +20,22 @@ const columns = [
     links: [
       { label: "Career blog", to: "/blog" },
       { label: "Resume examples", to: "/#examples" },
-      { label: "Cover letter tips", to: "/#" },
-      { label: "Interview guides", to: "/#" },
+      {
+        label: "Cover letter tips",
+        to: "https://www.indeed.com/career-advice/resumes-cover-letters/how-to-write-a-cover-letter",
+      },
+      {
+        label: "Interview guides",
+        to: "https://www.indeed.com/career-advice/interviewing",
+      },
     ],
   },
   {
-    title: "Company",
+    title: "More by the Developer",
     links: [
-      { label: "About", to: "/#" },
-      { label: "Contact", to: "/#" },
-      { label: "Careers", to: "/#" },
+      { label: "SSUET Notes", to: "https://ssuet-notes12.vercel.app/" },
+      { label: "SSUET Connect", to: "https://ssuetconnects.vercel.app/" },
+      { label: "Food Analyzer", to: "https://github.com/mkhalidh/Food_Analyzer" },
     ],
   },
   {
@@ -76,12 +82,23 @@ const Footer = () => {
               <ul className="space-y-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      to={link.to}
-                      className="font-body text-white/50 text-sm hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.to.startsWith("http") ? (
+                      <a
+                        href={link.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-body text-white/50 text-sm hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.to}
+                        className="font-body text-white/50 text-sm hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
