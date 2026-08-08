@@ -1,8 +1,5 @@
-import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
-import { AzureKeyCredential } from "@azure/core-auth";
-
-const ENDPOINT = "https://models.github.ai/inference";
-const MODEL = "openai/gpt-4.1";
+const ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL = "llama-3.3-70b-versatile";
 const MAX_JOB_DESCRIPTION_LENGTH = 6000;
 const MAX_KEYWORDS_PER_LIST = 30;
 const MAX_RESUME_CONTENT_LENGTH = 4000;
@@ -73,7 +70,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const token = process.env.GITHUB_MODELS_TOKEN;
+  const token = process.env.GROQ_API_KEY;
   if (!token) {
     res.status(500).json({
       error: "AI suggestions aren't configured on this server yet.",
@@ -104,10 +101,13 @@ export default async function handler(req, res) {
       : "";
 
   try {
-    const client = ModelClient(ENDPOINT, new AzureKeyCredential(token));
-
-    const response = await client.path("/chat/completions").post({
-      body: {
+    const response = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           {
@@ -123,14 +123,15 @@ export default async function handler(req, res) {
         top_p: 1,
         model: MODEL,
         response_format: { type: "json_object" },
-      },
+      }),
     });
 
-    if (isUnexpected(response)) {
-      throw response.body.error;
+    const body = await response.json();
+    if (!response.ok) {
+      throw body.error || body;
     }
 
-    const raw = response.body.choices[0].message.content;
+    const raw = body.choices[0].message.content;
     let guidance;
     try {
       guidance = JSON.parse(raw);
